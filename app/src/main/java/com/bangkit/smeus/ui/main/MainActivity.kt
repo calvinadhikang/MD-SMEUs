@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Lock
@@ -23,6 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +43,7 @@ import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.ButtonFormPreview
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.theme.SMEUsTheme
+import java.util.Objects
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +65,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.padding(16.dp)
+        modifier = modifier
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         val context = LocalContext.current
+        var username by rememberSaveable { mutableStateOf("") }
+        var usernameErrorText by rememberSaveable { mutableStateOf("") }
+        var password by rememberSaveable { mutableStateOf("") }
+        var passwordErrorText by rememberSaveable { mutableStateOf("") }
+
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "",
@@ -86,15 +101,21 @@ fun Main(modifier: Modifier = Modifier) {
             modifier = modifier.padding(bottom = 8.dp)
         ) {
             InputForm(
-                text = "",
+                text = username,
                 label = "Username",
-                onValueChange = { },
+                onValueChange = {
+                    username = it
+                },
+                errorText = usernameErrorText,
                 leadingIcon = { Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "") }
             )
             InputForm(
-                text = "",
+                text = password,
                 label = "Password",
-                onValueChange = {},
+                onValueChange = {
+                    password = it
+                },
+                errorText = passwordErrorText,
                 leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "") }
             )
         }
@@ -102,11 +123,21 @@ fun Main(modifier: Modifier = Modifier) {
             text = "Sign In",
             color = Color.Blue,
             onClick = {
+                if (username == ""){
+                    usernameErrorText = "Username cannot be null"
+                }else{
+                    usernameErrorText = ""
+                }
 
+                if (password == ""){
+                    passwordErrorText = "Password cannot be null"
+                }else{
+                    passwordErrorText = ""
+                }
             },
             modifier = modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(80.dp)
                 .padding(top = 8.dp, bottom = 16.dp)
         )
         Row(
@@ -129,7 +160,6 @@ fun Main(modifier: Modifier = Modifier) {
             )
         }
     }
-
 }
 
 @Preview(showBackground = true)

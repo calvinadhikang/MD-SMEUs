@@ -29,6 +29,7 @@ fun InputForm(
     modifier: Modifier = Modifier,
     text: String,
     label: String,
+    errorText: String,
     onValueChange: (it: String) -> Unit,
     leadingIcon: @Composable () -> Unit?
 ) {
@@ -41,6 +42,14 @@ fun InputForm(
         value = value,
         label = {
             Text(text = label, color = Color.Black)
+        },
+        supportingText = {
+            if (errorText != ""){
+                Text(
+                    text = errorText,
+                    color = Color.Red
+                )
+            }
         },
         onValueChange = {
             value = it
@@ -64,8 +73,14 @@ fun InputForm(
 @Composable
 fun TextFormPreview() {
     MaterialTheme {
-        InputForm(text = "", label = "Input", onValueChange = { }, leadingIcon = {
-            Icon(imageVector = Icons.Rounded.Search, contentDescription = "SearchIcon")
-        })
+        InputForm(
+            text = "",
+            label = "Input",
+            onValueChange = { },
+            leadingIcon = {
+                Icon(imageVector = Icons.Rounded.Search, contentDescription = "SearchIcon")
+            },
+            errorText = "Error bang"
+        )
     }
 }
