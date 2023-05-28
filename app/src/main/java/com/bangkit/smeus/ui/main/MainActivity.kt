@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -42,6 +43,7 @@ import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.ButtonFormPreview
 import com.bangkit.smeus.ui.components.InputForm
+import com.bangkit.smeus.ui.register.RegisterActivity
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 import java.util.Objects
 
@@ -156,7 +158,7 @@ fun Main(modifier: Modifier = Modifier) {
                 color = Color.Blue,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.clickable {
-                    Toast.makeText( context,"clicked", Toast.LENGTH_SHORT).show()
+                    context.startActivity(Intent(context, RegisterActivity::class.java))
                 }
             )
         }
