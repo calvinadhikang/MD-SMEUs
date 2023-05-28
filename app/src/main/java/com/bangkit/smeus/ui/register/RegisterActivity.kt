@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.register
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -206,7 +207,8 @@ fun Register(
                 color = Color.Blue,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.clickable {
-                    Toast.makeText( context,"clicked", Toast.LENGTH_SHORT).show()
+                    val activity = (context as Activity)
+                    activity.finish()
                 }
             )
         }
