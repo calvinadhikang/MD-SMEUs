@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bangkit.smeus.ui.navigation.NavigationItem
 import com.bangkit.smeus.ui.navigation.Screen
 import com.bangkit.smeus.ui.screen.HomeScreen
+import com.bangkit.smeus.ui.screen.ProfileScreen
 
 class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +84,7 @@ fun User(
 
                 }
                 composable(Screen.Profile.route){
-
+                    ProfileScreen()
                 }
             }
         }
