@@ -131,19 +131,19 @@ fun Main(modifier: Modifier = Modifier) {
                 var valid = true
 
                 if (email == ""){
-                    valid = false
                     emailErrorText = "Username cannot be null"
                 }else{
                     emailErrorText = ""
-                    valid = true
                 }
 
                 if (password == ""){
-                    valid = false
                     passwordErrorText = "Password cannot be null"
                 }else{
                     passwordErrorText = ""
-                    valid = true
+                }
+
+                if (email == "" || password == ""){
+                    valid = false
                 }
 
                 if (valid){
