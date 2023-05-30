@@ -72,14 +72,12 @@ fun Register(
         val context = LocalContext.current
 
         var name by rememberSaveable { mutableStateOf("") }
-        var username by rememberSaveable { mutableStateOf("") }
         var email by rememberSaveable { mutableStateOf("") }
         var phone by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
         var confirmPassword by rememberSaveable { mutableStateOf("") }
 
         var nameErrorText by rememberSaveable { mutableStateOf("") }
-        var usernameErrorText by rememberSaveable { mutableStateOf("") }
         var emailErrorText by rememberSaveable { mutableStateOf("") }
         var phoneErrorText by rememberSaveable { mutableStateOf("") }
         var passwordErrorText by rememberSaveable { mutableStateOf("") }
@@ -165,16 +163,18 @@ fun Register(
             text = "Sign Up",
             color = Color.Blue,
             onClick = {
-                if (username == ""){
-                    usernameErrorText = "Username cannot be null"
-                }else{
-                    usernameErrorText = ""
-                }
+                var valid = true
 
                 if (password == ""){
                     passwordErrorText = "Password cannot be null"
                 }else{
                     passwordErrorText = ""
+                }
+
+                if (valid){
+                    Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+                    val activity = (context as Activity)
+                    activity.finish()
                 }
             },
             modifier = modifier
