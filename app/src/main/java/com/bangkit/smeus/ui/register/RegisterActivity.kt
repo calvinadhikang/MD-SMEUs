@@ -207,6 +207,8 @@ fun Register(
                     Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
                     val activity = (context as Activity)
                     activity.finish()
+                }else{
+                    Toast.makeText(context, "Registered Unsuccessful", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = modifier
