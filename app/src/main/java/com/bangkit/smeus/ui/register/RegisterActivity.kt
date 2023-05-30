@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -110,17 +111,6 @@ fun Register(
                 errorText = nameErrorText,
                 onValueChange = {
                     name = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Email, contentDescription = "")
-                }
-            )
-            InputForm(
-                text = username,
-                label = "Username",
-                errorText = usernameErrorText,
-                onValueChange = {
-                    username = it
                 },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")

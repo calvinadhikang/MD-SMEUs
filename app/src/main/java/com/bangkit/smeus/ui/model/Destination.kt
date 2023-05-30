@@ -7,5 +7,4 @@ class Destination(
     var category: String,
     var price: String,
     var photo: Int
-) {
-}
+)

@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +46,7 @@ import com.bangkit.smeus.ui.components.ButtonFormPreview
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.register.RegisterActivity
 import com.bangkit.smeus.ui.theme.SMEUsTheme
+import com.bangkit.smeus.ui.user.UserActivity
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -73,9 +75,9 @@ fun Main(modifier: Modifier = Modifier) {
     ) {
         val context = LocalContext.current
 
-        var username by rememberSaveable { mutableStateOf("") }
+        var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-        var usernameErrorText by rememberSaveable { mutableStateOf("") }
+        var emailErrorText by rememberSaveable { mutableStateOf("") }
         var passwordErrorText by rememberSaveable { mutableStateOf("") }
 
         Image(
@@ -104,13 +106,13 @@ fun Main(modifier: Modifier = Modifier) {
             modifier = modifier.padding(bottom = 8.dp)
         ) {
             InputForm(
-                text = username,
-                label = "Username",
+                text = email,
+                label = "Email",
                 onValueChange = {
-                    username = it
+                    email = it
                 },
-                errorText = usernameErrorText,
-                leadingIcon = { Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "") }
+                errorText = emailErrorText,
+                leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "") }
             )
             InputForm(
                 text = password,
@@ -126,16 +128,25 @@ fun Main(modifier: Modifier = Modifier) {
             text = "Sign In",
             color = Color.Blue,
             onClick = {
-                if (username == ""){
-                    usernameErrorText = "Username cannot be null"
+                var valid = true
+                if (email == ""){
+                    valid = false
+                    emailErrorText = "Username cannot be null"
                 }else{
-                    usernameErrorText = ""
+                    emailErrorText = ""
+                    valid = true
                 }
 
                 if (password == ""){
+                    valid = false
                     passwordErrorText = "Password cannot be null"
                 }else{
                     passwordErrorText = ""
+                    valid = true
+                }
+
+                if (valid){
+                    context.startActivity(Intent(context, UserActivity::class.java))
                 }
             },
             modifier = modifier
