@@ -33,8 +33,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bangkit.smeus.ui.navigation.NavigationItem
 import com.bangkit.smeus.ui.navigation.Screen
+import com.bangkit.smeus.ui.screen.FavoriteScreen
 import com.bangkit.smeus.ui.screen.HomeScreen
 import com.bangkit.smeus.ui.screen.ProfileScreen
+import com.bangkit.smeus.ui.screen.SearchScreen
 
 class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,10 +80,10 @@ fun User(
                     HomeScreen()
                 }
                 composable(Screen.Search.route){
-
+                    SearchScreen()
                 }
                 composable(Screen.Favorite.route){
-
+                    FavoriteScreen()
                 }
                 composable(Screen.Profile.route){
                     ProfileScreen()
