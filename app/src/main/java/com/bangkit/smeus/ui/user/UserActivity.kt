@@ -65,7 +65,9 @@ fun User(
             )
         }
     ) {innerPadding ->
-        Box(modifier = modifier.padding(innerPadding)){
+        Box(
+            modifier = modifier.padding(innerPadding)
+        ){
             NavHost(
                 navController = navController,
                 startDestination = Screen.Home.route,
