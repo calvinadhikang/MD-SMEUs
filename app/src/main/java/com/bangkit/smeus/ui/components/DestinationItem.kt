@@ -42,14 +42,14 @@ fun DestinationItem(
 ){
     Column(
         modifier = modifier
-            .width(250.dp)
+            .width(265.dp)
     ) {
         Image(
             painter = painterResource(id = image),
             contentDescription = "",
             modifier = modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(265.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
         Text(
