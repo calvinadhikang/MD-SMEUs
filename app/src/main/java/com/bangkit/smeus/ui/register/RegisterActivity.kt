@@ -165,10 +165,42 @@ fun Register(
             onClick = {
                 var valid = true
 
+                if (name == ""){
+                    nameErrorText = "Password cannot be null"
+                }else{
+                    nameErrorText = ""
+                }
+
+                if (email == ""){
+                    emailErrorText = "Password cannot be null"
+                }else{
+                    emailErrorText = ""
+                }
+
+                if (phone == ""){
+                    phoneErrorText = "Password cannot be null"
+                }else{
+                    phoneErrorText = ""
+                }
+
                 if (password == ""){
                     passwordErrorText = "Password cannot be null"
                 }else{
                     passwordErrorText = ""
+                }
+
+                if (confirmPassword == ""){
+                    confirmPasswordErrorText = "Password cannot be null"
+                }else{
+                    confirmPasswordErrorText = ""
+                }
+
+                if (confirmPassword != password){
+                    confirmPasswordErrorText = "Password must be the same with Confirmation Password"
+                }
+
+                if (name == "" || email == "" || phone == "" || password == "" || confirmPassword == "" || password != confirmPassword) {
+                    valid = false
                 }
 
                 if (valid){
