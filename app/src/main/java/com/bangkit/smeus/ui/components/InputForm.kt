@@ -34,13 +34,11 @@ fun InputForm(
     onValueChange: (it: String) -> Unit,
     leadingIcon: @Composable () -> Unit?
 ) {
-    var value by rememberSaveable { mutableStateOf(text) }
-
     TextField(
         leadingIcon = {
             leadingIcon()
         },
-        value = value,
+        value = text,
         label = {
             Text(text = label, color = Color.Black)
         },
@@ -53,7 +51,6 @@ fun InputForm(
             }
         },
         onValueChange = {
-            value = it
             onValueChange(it)
         },
         colors = TextFieldDefaults.textFieldColors(
