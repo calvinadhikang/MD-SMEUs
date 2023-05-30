@@ -129,6 +129,7 @@ fun Main(modifier: Modifier = Modifier) {
             color = Color.Blue,
             onClick = {
                 var valid = true
+
                 if (email == ""){
                     valid = false
                     emailErrorText = "Username cannot be null"
