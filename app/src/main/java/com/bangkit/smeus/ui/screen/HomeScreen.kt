@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,12 +29,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.R
+import com.bangkit.smeus.ui.components.CategoryItem
 import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
+import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
 
 @Composable
@@ -44,6 +49,11 @@ fun HomeScreen(
         Destination(1, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
         Destination(2, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
         Destination(3, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
+    )
+    var listCategoryFake = listOf<Category>(
+        Category(1, "Foods", false),
+        Category(2,"Beverages", false),
+        Category(3,"Craft", false)
     )
     var searchText by rememberSaveable { mutableStateOf("") }
 
@@ -105,14 +115,14 @@ fun HomeScreen(
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ) {
-            items(items = listDestinationFake, key = { it -> it.id }) { it ->
-                DestinationItem(
-                    image = it.photo,
-                    name = it.name,
-                    location = it.location,
-                    category = it.category,
-                    price = it.price,
-                    onClick = { }
+            items(items = listCategoryFake, key = { it -> it.id }) { it ->
+                CategoryItem(
+                    id = it.id,
+                    text = it.text,
+                    selected = it.selected,
+                    onClick = { it ->
+
+                    }
                 )
             }
         }
@@ -141,5 +151,13 @@ fun HomeScreen(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    MaterialTheme {
+        HomeScreen()
     }
 }

@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,8 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.R
+import com.bangkit.smeus.ui.components.CategoryItem
 import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
+import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
 
 @Composable
@@ -47,6 +51,19 @@ fun FavoriteScreen(
         Destination(6, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
         Destination(7, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
         Destination(8, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
+    )
+    var listCategoryFake = listOf<Category>(
+        Category(1, "Foods", false),
+        Category(2,"Beverages", false),
+        Category(3,"Craft", false),
+        Category(4,"Goods", false),
+        Category(5,"OMG", false),
+        Category(6,"Bebas", false)
+    )
+    var listPriceFake = listOf<Category>(
+        Category(2,"< 25K", false),
+        Category(3,"25-50K", false),
+        Category(4,"> 50K", false),
     )
 
     Column(
@@ -73,8 +90,23 @@ fun FavoriteScreen(
                 )
             }
         )
-        Row(){
-
+        Column(
+            modifier = modifier.padding(bottom = 24.dp)
+        ){
+            Spacer(modifier = modifier.height(8.dp))
+            Text(text = "Category List")
+            LazyRow() {
+                items(items = listCategoryFake, key = {it -> it.id}) {
+                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
+                }
+            }
+            Spacer(modifier = modifier.height(8.dp))
+            Text(text = "Price List")
+            LazyRow() {
+                items(items = listPriceFake, key = {it -> it.id}) {
+                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
+                }
+            }
         }
         Text(
             text = "Showing 8 Results",
@@ -84,7 +116,6 @@ fun FavoriteScreen(
             textAlign = TextAlign.Center,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
         )
         LazyVerticalGrid(
             columns = GridCells.Adaptive(200.dp),
