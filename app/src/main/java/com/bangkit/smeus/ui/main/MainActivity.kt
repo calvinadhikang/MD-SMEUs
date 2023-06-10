@@ -23,13 +23,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -45,9 +48,12 @@ import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.ButtonFormPreview
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.register.RegisterActivity
+import com.bangkit.smeus.ui.repository.SmeRepository
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 import com.bangkit.smeus.ui.user.UserActivity
 import java.util.Objects
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,19 +73,26 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Main(modifier: Modifier = Modifier) {
+fun Main(
+    viewModel: MainViewModel = viewModel(factory = ViewModelFactory(
+        SmeRepository()
+    )),
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+
+    val isLoading by viewModel.loading.observeAsState(false)
+
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var emailErrorText by rememberSaveable { mutableStateOf("") }
+    var passwordErrorText by rememberSaveable { mutableStateOf("") }
+
     Column(
         modifier = modifier
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        val context = LocalContext.current
-
-        var email by rememberSaveable { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
-        var emailErrorText by rememberSaveable { mutableStateOf("") }
-        var passwordErrorText by rememberSaveable { mutableStateOf("") }
-
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "",
@@ -124,22 +137,24 @@ fun Main(modifier: Modifier = Modifier) {
                 leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "") }
             )
         }
-        ButtonForm(
+        ButtonFormWithLoading(
+            isLoading = isLoading,
             text = "Sign In",
             color = Color.Blue,
             onClick = {
+                viewModel.loading()
                 var valid = true
 
-                if (email == ""){
-                    emailErrorText = "Username cannot be null"
+                emailErrorText = if (email == ""){
+                    "Username cannot be null"
                 }else{
-                    emailErrorText = ""
+                    ""
                 }
 
-                if (password == ""){
-                    passwordErrorText = "Password cannot be null"
+                passwordErrorText = if (password == ""){
+                    "Password cannot be null"
                 }else{
-                    passwordErrorText = ""
+                    ""
                 }
 
                 if (email == "" || password == ""){
