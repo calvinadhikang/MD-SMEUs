@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.ui.components.ButtonForm
+import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 import com.bangkit.smeus.ui.components.InputForm
 
 class RegisterActivity : ComponentActivity() {
@@ -62,27 +64,31 @@ class RegisterActivity : ComponentActivity() {
 
 @Composable
 fun Register(
+    viewModel: RegisterViewModel = RegisterViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
+    val isLoading by viewModel.loading.observeAsState(false)
+    val registerMessage by viewModel.responseMessage.observeAsState("")
+
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var phone by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+
+    var nameErrorText by rememberSaveable { mutableStateOf("") }
+    var emailErrorText by rememberSaveable { mutableStateOf("") }
+    var phoneErrorText by rememberSaveable { mutableStateOf("") }
+    var passwordErrorText by rememberSaveable { mutableStateOf("") }
+    var confirmPasswordErrorText by rememberSaveable { mutableStateOf("") }
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
     ) {
-        val context = LocalContext.current
-
-        var name by rememberSaveable { mutableStateOf("") }
-        var email by rememberSaveable { mutableStateOf("") }
-        var phone by rememberSaveable { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
-        var confirmPassword by rememberSaveable { mutableStateOf("") }
-
-        var nameErrorText by rememberSaveable { mutableStateOf("") }
-        var emailErrorText by rememberSaveable { mutableStateOf("") }
-        var phoneErrorText by rememberSaveable { mutableStateOf("") }
-        var passwordErrorText by rememberSaveable { mutableStateOf("") }
-        var confirmPasswordErrorText by rememberSaveable { mutableStateOf("") }
-
         Text(
             text = "Create Account",
             fontSize = 35.sp,
@@ -159,40 +165,45 @@ fun Register(
                 }
             )
         }
-        ButtonForm(
+        Text(
+            text = registerMessage,
+            color = Color.Red
+        )
+        ButtonFormWithLoading(
+            isLoading = isLoading,
             text = "Sign Up",
             color = Color.Blue,
             onClick = {
                 var valid = true
 
-                if (name == ""){
-                    nameErrorText = "Password cannot be null"
-                }else{
-                    nameErrorText = ""
+                nameErrorText = if (name == "") {
+                    "Name cannot be null"
+                } else {
+                    ""
                 }
 
-                if (email == ""){
-                    emailErrorText = "Password cannot be null"
+                emailErrorText = if (email == ""){
+                    "Email cannot be null"
                 }else{
-                    emailErrorText = ""
+                    ""
                 }
 
-                if (phone == ""){
-                    phoneErrorText = "Password cannot be null"
+                phoneErrorText = if (phone == ""){
+                    "Phone cannot be null"
                 }else{
-                    phoneErrorText = ""
+                    ""
                 }
 
-                if (password == ""){
-                    passwordErrorText = "Password cannot be null"
+                passwordErrorText = if (password == ""){
+                    "Password cannot be null"
                 }else{
-                    passwordErrorText = ""
+                    ""
                 }
 
-                if (confirmPassword == ""){
-                    confirmPasswordErrorText = "Password cannot be null"
+                confirmPasswordErrorText = if (confirmPassword == ""){
+                    "Confirm Password cannot be null"
                 }else{
-                    confirmPasswordErrorText = ""
+                    ""
                 }
 
                 if (confirmPassword != password){
@@ -204,9 +215,10 @@ fun Register(
                 }
 
                 if (valid){
-                    Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                    val activity = (context as Activity)
-                    activity.finish()
+                    viewModel.register(name, email, phone, password)
+//                    Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+//                    val activity = (context as Activity)
+//                    activity.finish()
                 }else{
                     Toast.makeText(context, "Registered Unsuccessful", Toast.LENGTH_SHORT).show()
                 }

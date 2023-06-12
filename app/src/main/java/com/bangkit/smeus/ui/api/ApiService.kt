@@ -20,5 +20,10 @@ interface ApiService {
 //    ): Call<LoginResponse>
 
     @GET("sme")
-    suspend fun fetchSMEs(): Call<SMEResponse>
+    fun fetchSMEs(): Call<SMEResponse>
+
+    @POST("register")
+    fun register(
+        @Body request: RegisterRequest
+    ): Call<RegisterResponse>
 }

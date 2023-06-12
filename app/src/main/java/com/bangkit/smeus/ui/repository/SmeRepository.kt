@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.repository
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.bangkit.smeus.ui.api.response.SMEResponse
@@ -10,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SmeRepository {
-    suspend fun getSMEs(): List<SMEResponseItem> {
+    fun getSMEs(): List<SMEResponseItem> {
         var data: List<SMEResponseItem> = listOf()
 
         val client = ApiConfig.getApiService().fetchSMEs()
@@ -18,6 +19,7 @@ class SmeRepository {
             override fun onResponse(call: Call<SMEResponse>, response: Response<SMEResponse>) {
                 if (response.isSuccessful){
                     data = response.body()!!.sMEResponse as List<SMEResponseItem>
+                    Log.e("data", data[0].city!!)
                 }
             }
 

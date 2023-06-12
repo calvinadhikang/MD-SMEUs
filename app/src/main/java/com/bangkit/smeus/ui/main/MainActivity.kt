@@ -2,6 +2,7 @@ package com.bangkit.smeus.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            SMEUsTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -82,6 +83,7 @@ fun Main(
     val context = LocalContext.current
 
     val isLoading by viewModel.loading.observeAsState(false)
+    val data by viewModel.listSmes.observeAsState(listOf())
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -140,9 +142,12 @@ fun Main(
         ButtonFormWithLoading(
             isLoading = isLoading,
             text = "Sign In",
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             onClick = {
-                viewModel.loading()
+                viewModel.getData()
+
+                Toast.makeText(context, data.size.toString(), Toast.LENGTH_SHORT).show()
+
                 var valid = true
 
                 emailErrorText = if (email == ""){
@@ -195,7 +200,7 @@ fun Main(
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
-    MaterialTheme {
+    SMEUsTheme() {
         Main()
     }
 }
