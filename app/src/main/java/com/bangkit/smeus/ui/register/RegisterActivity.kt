@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -44,12 +45,13 @@ import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 import com.bangkit.smeus.ui.components.InputForm
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            SMEUsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -69,8 +71,8 @@ fun Register(
 ) {
     val context = LocalContext.current
 
-    val isLoading by viewModel.loading.observeAsState(false)
-    val registerMessage by viewModel.responseMessage.observeAsState("")
+    val isLoading by viewModel.loading.collectAsState()
+    val registerMessage by viewModel.responseMessage.collectAsState()
 
     var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -172,7 +174,7 @@ fun Register(
         ButtonFormWithLoading(
             isLoading = isLoading,
             text = "Sign Up",
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             onClick = {
                 var valid = true
 
@@ -215,12 +217,14 @@ fun Register(
                 }
 
                 if (valid){
-                    viewModel.register(name, email, phone, password)
-//                    Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-//                    val activity = (context as Activity)
-//                    activity.finish()
-                }else{
-                    Toast.makeText(context, "Registered Unsuccessful", Toast.LENGTH_SHORT).show()
+                    var success = viewModel.register(name, email, phone, password)
+                    if (success){
+                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+                        val activity = (context as Activity)
+                        activity.finish()
+                    }else{
+                        Toast.makeText(context, "Register Unsuccessful", Toast.LENGTH_SHORT).show()
+                    }
                 }
             },
             modifier = modifier
@@ -254,7 +258,7 @@ fun Register(
 @Preview(showBackground = true)
 @Composable
 fun RegisterPreview() {
-    MaterialTheme {
+    SMEUsTheme {
         Register()
     }
 }

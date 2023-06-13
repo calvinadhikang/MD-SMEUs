@@ -80,13 +80,6 @@ fun HomeScreen(
                     modifier = modifier
                 )
             }
-            Image(
-                imageVector = Icons.Default.Notifications,
-                contentDescription = "",
-                modifier = modifier
-                    .border(1.dp, Color.Gray, CircleShape)
-                    .padding(8.dp)
-            )
         }
         Spacer(modifier = modifier.height(16.dp))
         InputForm(

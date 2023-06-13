@@ -10,36 +10,41 @@ import com.bangkit.smeus.ui.api.response.SMEResponse
 import com.bangkit.smeus.ui.api.response.SMEResponseItem
 import com.example.storyapp.api.ApiConfig
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class RegisterViewModel : ViewModel() {
 
-    private val _loading = MutableLiveData<Boolean>()
-    var loading: LiveData<Boolean> = _loading
+    private val _responseMessage = MutableStateFlow("")
+    val responseMessage: StateFlow<String> get() = _responseMessage
 
-    private val _responseMessage = MutableLiveData<String>()
-    var responseMessage: LiveData<String> = _responseMessage
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> get() = _loading
 
     fun register(
         name: String,
         email: String,
         phone: String,
         password: String
-    ){
+    ): Boolean {
+        var success = false
         _loading.value = true
 
-        val request: RegisterRequest = RegisterRequest(name, email, phone, password)
-        val client = ApiConfig.getApiService().register(request)
+        val client = ApiConfig.getApiService().register(name, email, phone, password)
         client.enqueue(object: Callback<RegisterResponse> {
             override fun onResponse(
                 call: Call<RegisterResponse>,
                 response: Response<RegisterResponse>
             ) {
-                if (response.code() == 200){
+                if (response.isSuccessful){
                     _loading.value = false
                     _responseMessage.value = response.body()!!.message
+                    Log.e("REGISTER", response.body()!!.message)
+
+                    success = true
                 }else{
                     val gson = GsonBuilder().create()
                     try {
@@ -55,9 +60,7 @@ class RegisterViewModel : ViewModel() {
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
             }
         })
-    }
 
-    fun setLoading(){
-        _loading.value = true
+        return success
     }
 }

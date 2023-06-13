@@ -22,8 +22,12 @@ interface ApiService {
     @GET("sme")
     fun fetchSMEs(): Call<SMEResponse>
 
+    @FormUrlEncoded
     @POST("register")
     fun register(
-        @Body request: RegisterRequest
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("phone") phone: String,
+        @Field("password") password: String
     ): Call<RegisterResponse>
 }
