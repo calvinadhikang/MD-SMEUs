@@ -126,16 +126,16 @@ fun SearchScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
         ){
-            items(items = listDestinationFake, key = {it -> it.id}){
-                DestinationItem(
-                    image = it.photo,
-                    name = it.name,
-                    location = it.location,
-                    category = it.category,
-                    price = it.price,
-                    onClick = { }
-                )
-            }
+//            items(items = listDestinationFake, key = {it -> it.id}){
+//                DestinationItem(
+//                    image = it.photo,
+//                    name = it.name,
+//                    location = it.location,
+//                    category = it.category,
+//                    price = it.price,
+//                    onClick = { }
+//                )
+//            }
         }
     }
 }

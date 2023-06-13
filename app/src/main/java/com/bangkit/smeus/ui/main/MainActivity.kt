@@ -83,7 +83,6 @@ fun Main(
     val context = LocalContext.current
 
     val isLoading by viewModel.loading.observeAsState(false)
-    val data by viewModel.listSmes.observeAsState(listOf())
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -144,10 +143,6 @@ fun Main(
             text = "Sign In",
             color = MaterialTheme.colorScheme.primary,
             onClick = {
-                viewModel.getData()
-
-                Toast.makeText(context, data.size.toString(), Toast.LENGTH_SHORT).show()
-
                 var valid = true
 
                 emailErrorText = if (email == ""){
@@ -162,11 +157,7 @@ fun Main(
                     ""
                 }
 
-                if (email == "" || password == ""){
-                    valid = false
-                }
-
-                if (valid){
+                if (email != "" && password != ""){
                     context.startActivity(Intent(context, UserActivity::class.java))
                 }
             },

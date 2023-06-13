@@ -28,29 +28,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.bangkit.smeus.R
 
 @Composable
 fun DestinationItem(
     modifier: Modifier = Modifier,
-    image: Int,
+    id: String,
+    image: String,
     name: String,
-    location: String,
-    category: String,
-    price: String,
-    onClick: () -> Unit
+    goods: String,
+    onClick: (it: String) -> Unit
 ){
     Column(
         modifier = modifier
             .width(265.dp)
+            .clickable {
+                onClick(id)
+            }
     ) {
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = "",
+        AsyncImage(
+            model = image,
+            contentDescription = image,
             modifier = modifier
-                .fillMaxWidth()
-                .height(265.dp)
-                .clip(RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .height(265.dp)
+            .clip(RoundedCornerShape(8.dp))
         )
         Text(
             text = name,
@@ -61,9 +64,8 @@ fun DestinationItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier.fillMaxWidth()
         ) {
-            IconText(text = location, icon = Icons.Default.LocationOn)
-            IconText(text = category, icon = Icons.Default.Settings)
-            IconText(text = price, icon = Icons.Default.PlayArrow)
+            IconText(text = name, icon = Icons.Default.LocationOn)
+            IconText(text = goods, icon = Icons.Default.Settings)
         }
     }
 }
@@ -73,13 +75,13 @@ fun DestinationItem(
 fun DestinationItemPreview() {
     MaterialTheme {
         DestinationItem(
-            image = R.drawable.ic_launcher_background,
+            image = "https://storage.googleapis.com/capstone-smeus/drive-gambar-sme/BD_49.jpg",
+            id = "1",
             name = "Name",
-            location = "Location",
-            category = "Category",
-            price = "Price K"
-        ) {
+            goods = "Souvenir",
+            onClick = {
 
-        }
+            }
+        )
     }
 }

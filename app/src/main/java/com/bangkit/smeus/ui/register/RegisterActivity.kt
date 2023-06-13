@@ -212,12 +212,8 @@ fun Register(
                     confirmPasswordErrorText = "Password must be the same with Confirmation Password"
                 }
 
-                if (name == "" || email == "" || phone == "" || password == "" || confirmPassword == "" || password != confirmPassword) {
-                    valid = false
-                }
-
-                if (valid){
-                    var success = viewModel.register(name, email, phone, password, context)
+                if (name != "" && email != "" && phone != "" && password != "" && confirmPassword != "" && password == confirmPassword) {
+                    viewModel.register(name, email, phone, password, context)
                 }
             },
             modifier = modifier

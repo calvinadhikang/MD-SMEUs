@@ -34,16 +34,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bangkit.smeus.ui.navigation.NavigationItem
 import com.bangkit.smeus.ui.navigation.Screen
+import com.bangkit.smeus.ui.screen.ExploreScreen
 import com.bangkit.smeus.ui.screen.FavoriteScreen
-import com.bangkit.smeus.ui.screen.HomeScreen
 import com.bangkit.smeus.ui.screen.ProfileScreen
 import com.bangkit.smeus.ui.screen.SearchScreen
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            SMEUsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -74,11 +75,11 @@ fun User(
         ){
             NavHost(
                 navController = navController,
-                startDestination = Screen.Home.route,
+                startDestination = Screen.Explore.route,
                 modifier = modifier
             ){
-                composable(Screen.Home.route){
-                    HomeScreen()
+                composable(Screen.Explore.route){
+                    ExploreScreen()
                 }
                 composable(Screen.Search.route){
                     SearchScreen()
@@ -109,14 +110,9 @@ fun BottomBar(
 
         val navigationItems = listOf(
             NavigationItem(
-                title = "Home",
-                icon = Icons.Default.Home,
-                screen = Screen.Home
-            ),
-            NavigationItem(
-                title = "Search",
+                title = "Explore",
                 icon = Icons.Default.Search,
-                screen = Screen.Search
+                screen = Screen.Explore
             ),
             NavigationItem(
                 title = "Favorite",
@@ -160,7 +156,7 @@ fun BottomBar(
 @Preview(showBackground = true)
 @Composable
 fun UserPreview() {
-    MaterialTheme {
+    SMEUsTheme() {
         User()
     }
 }

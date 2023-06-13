@@ -32,7 +32,7 @@ fun CategoryItem(
     OutlinedButton(
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = container
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         border = BorderStroke(1.dp, Color.Transparent),
         onClick = {
@@ -41,7 +41,7 @@ fun CategoryItem(
         },
         modifier = modifier,
     ) {
-        Text(text = text)
+        Text(text = text, color = Color.White)
     }
 }
 

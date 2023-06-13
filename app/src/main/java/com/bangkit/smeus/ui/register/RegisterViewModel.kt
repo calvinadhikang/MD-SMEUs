@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.register
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -7,8 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bangkit.smeus.ui.api.RegisterResponse
-import com.bangkit.smeus.ui.api.response.SMEResponse
-import com.bangkit.smeus.ui.api.response.SMEResponseItem
 import com.example.storyapp.api.ApiConfig
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +30,7 @@ class RegisterViewModel : ViewModel() {
         phone: String,
         password: String,
         context: Context
-    ): Boolean {
+    ){
         var success = false
         _loading.value = true
 
@@ -43,12 +42,16 @@ class RegisterViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful){
                     _loading.value = false
-                    _responseMessage.value = response.body()!!.message
-                    Log.e("REGISTER", response.body()!!.message)
+                    val message = response.body()!!.message
 
+                    _responseMessage.value = message
+                    Log.e("REGISTER", message)
                     Toast.makeText(context, response.body()!!.message, Toast.LENGTH_SHORT).show()
 
-                    success = true
+                    if (message == "berhasil register!"){
+                        val activity = context as Activity
+                        activity.finish()
+                    }
                 }else{
                     val gson = GsonBuilder().create()
                     try {
@@ -64,7 +67,5 @@ class RegisterViewModel : ViewModel() {
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
             }
         })
-
-        return success
     }
 }

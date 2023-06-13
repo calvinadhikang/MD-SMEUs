@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.bangkit.smeus.ui.api.LoginResponse
-import com.bangkit.smeus.ui.api.response.SMEResponse
-import com.bangkit.smeus.ui.api.response.SMEResponseItem
 import com.bangkit.smeus.ui.repository.SmeRepository
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +22,6 @@ class MainViewModel(
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
-    private val _listSmes = MutableLiveData<List<SMEResponseItem>>()
-    var listSmes: LiveData<List<SMEResponseItem>> = _listSmes
-
     fun login(email: String, password: String){
         _loading.value = true
 
@@ -39,22 +34,6 @@ class MainViewModel(
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-            }
-        })
-    }
-
-    fun getData() {
-        val client = ApiConfig.getApiService().fetchSMEs()
-        client.enqueue(object: Callback<SMEResponse> {
-            override fun onResponse(call: Call<SMEResponse>, response: Response<SMEResponse>) {
-                if (response.isSuccessful){
-                    Log.e("TEST", response.body()!!.toString())
-                    _listSmes.value = response.body()!!.sMEResponse as List<SMEResponseItem>
-                }
-            }
-
-            override fun onFailure(call: Call<SMEResponse>, t: Throwable) {
-
             }
         })
     }

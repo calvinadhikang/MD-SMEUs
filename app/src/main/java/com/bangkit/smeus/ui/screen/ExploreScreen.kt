@@ -1,7 +1,5 @@
 package com.bangkit.smeus.ui.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,23 +11,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,10 +37,12 @@ import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier
+fun ExploreScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ExploreViewModel = ExploreViewModel()
 ) {
     var listDestinationFake = listOf<Destination>(
         Destination(1, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
@@ -56,6 +55,9 @@ fun HomeScreen(
         Category(3,"Craft", false)
     )
     var searchText by rememberSaveable { mutableStateOf("") }
+
+    val smeList = viewModel.smeList.collectAsState(emptyList())
+    viewModel.fetchSME()
 
     Column(
         modifier = modifier
@@ -133,14 +135,15 @@ fun HomeScreen(
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ) {
-            items(items = listDestinationFake, key = { it -> it.id }) { it ->
+            items(items = smeList.value, key = { it -> it.indexPlace }) { it ->
                 DestinationItem(
-                    image = it.photo,
-                    name = it.name,
-                    location = it.location,
-                    category = it.category,
-                    price = it.price,
-                    onClick = { }
+                    id = it.indexPlace,
+                    image = it.image,
+                    name = it.nameSmes,
+                    goods = it.goods,
+                    onClick = {
+
+                    }
                 )
             }
         }
@@ -150,7 +153,7 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    MaterialTheme {
-        HomeScreen()
+    SMEUsTheme {
+        ExploreScreen()
     }
 }

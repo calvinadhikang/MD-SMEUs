@@ -1,6 +1,5 @@
 package com.bangkit.smeus.ui.api
 
-import com.bangkit.smeus.ui.api.response.SMEResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -20,7 +19,7 @@ interface ApiService {
 //    ): Call<LoginResponse>
 
     @GET("sme")
-    fun fetchSMEs(): Call<SMEResponse>
+    fun fetchSMEs(): Call<List<DetailSMEResponse>>
 
     @FormUrlEncoded
     @POST("register")

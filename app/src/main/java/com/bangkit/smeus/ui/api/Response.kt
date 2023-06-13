@@ -17,38 +17,44 @@ data class LoginResponse(
     val token: String,
 )
 
+data class SmeResponseList(
+
+    @field:SerializedName("SmeResponse")
+    val smeResponseList: List<DetailSMEResponse?>? = null
+)
+
 data class DetailSMEResponse(
 
     @field:SerializedName("image")
-    val image: String? = null,
+    val image: String,
 
     @field:SerializedName("specialty")
-    val specialty: String? = null,
+    val specialty: String,
 
     @field:SerializedName("general_category")
-    val generalCategory: String? = null,
+    val generalCategory: String,
 
     @field:SerializedName("city")
-    val city: String? = null,
+    val city: String,
 
     @field:SerializedName("name_smes")
-    val nameSmes: String? = null,
+    val nameSmes: String,
 
     @field:SerializedName("contact")
-    val contact: String? = null,
+    val contact: String,
 
     @field:SerializedName("index_place")
-    val indexPlace: String? = null,
+    val indexPlace: String,
 
     @field:SerializedName("rating")
-    val rating: Any? = null,
+    val rating: Int,
 
     @field:SerializedName("price_range")
-    val priceRange: String? = null,
+    val priceRange: String,
 
     @field:SerializedName("goods")
-    val goods: String? = null,
+    val goods: String,
 
     @field:SerializedName("description")
-    val description: String? = null
+    val description: String
 )
