@@ -1,10 +1,11 @@
 package com.bangkit.smeus.ui.register
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bangkit.smeus.ui.api.RegisterRequest
 import com.bangkit.smeus.ui.api.RegisterResponse
 import com.bangkit.smeus.ui.api.response.SMEResponse
 import com.bangkit.smeus.ui.api.response.SMEResponseItem
@@ -28,7 +29,8 @@ class RegisterViewModel : ViewModel() {
         name: String,
         email: String,
         phone: String,
-        password: String
+        password: String,
+        context: Context
     ): Boolean {
         var success = false
         _loading.value = true
@@ -43,6 +45,8 @@ class RegisterViewModel : ViewModel() {
                     _loading.value = false
                     _responseMessage.value = response.body()!!.message
                     Log.e("REGISTER", response.body()!!.message)
+
+                    Toast.makeText(context, response.body()!!.message, Toast.LENGTH_SHORT).show()
 
                     success = true
                 }else{

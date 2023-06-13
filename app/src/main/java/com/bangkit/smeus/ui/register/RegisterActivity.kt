@@ -217,14 +217,7 @@ fun Register(
                 }
 
                 if (valid){
-                    var success = viewModel.register(name, email, phone, password)
-                    if (success){
-                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                        val activity = (context as Activity)
-                        activity.finish()
-                    }else{
-                        Toast.makeText(context, "Register Unsuccessful", Toast.LENGTH_SHORT).show()
-                    }
+                    var success = viewModel.register(name, email, phone, password, context)
                 }
             },
             modifier = modifier

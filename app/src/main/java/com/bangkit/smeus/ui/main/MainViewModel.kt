@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.bangkit.smeus.ui.api.LoginResponse
 import com.bangkit.smeus.ui.api.response.SMEResponse
 import com.bangkit.smeus.ui.api.response.SMEResponseItem
 import com.bangkit.smeus.ui.repository.SmeRepository
@@ -26,8 +27,20 @@ class MainViewModel(
     private val _listSmes = MutableLiveData<List<SMEResponseItem>>()
     var listSmes: LiveData<List<SMEResponseItem>> = _listSmes
 
-    fun loading(){
+    fun login(email: String, password: String){
         _loading.value = true
+
+        val client = ApiConfig.getApiService().login(email, password)
+        client.enqueue(object: Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful){
+
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            }
+        })
     }
 
     fun getData() {
