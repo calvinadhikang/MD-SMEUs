@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,12 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.bangkit.smeus.ui.navigation.NavigationItem
 import com.bangkit.smeus.ui.navigation.Screen
+import com.bangkit.smeus.ui.screen.DetailScreen
 import com.bangkit.smeus.ui.screen.ExploreScreen
 import com.bangkit.smeus.ui.screen.FavoriteScreen
 import com.bangkit.smeus.ui.screen.ProfileScreen
@@ -79,7 +83,11 @@ fun User(
                 modifier = modifier
             ){
                 composable(Screen.Explore.route){
-                    ExploreScreen()
+                    ExploreScreen(
+                        navigateToDetail = {smeId ->
+                            navController.navigate(Screen.Detail.createRoute(smeId))
+                        }
+                    )
                 }
                 composable(Screen.Search.route){
                     SearchScreen()
@@ -89,6 +97,21 @@ fun User(
                 }
                 composable(Screen.Profile.route){
                     ProfileScreen()
+                }
+                composable(
+                    route = Screen.Detail.route,
+                    arguments = listOf(navArgument("smeId") {type = NavType.StringType})
+                ){
+                    val id = it.arguments?.getString("smeId") ?: ""
+                    DetailScreen(
+                        smeId = id,
+                        navigateBack = {
+                            navController.navigateUp()
+                        },
+                        navigateToDetail = {smeId ->
+                            navController.navigate(Screen.Detail.createRoute(smeId))
+                        }
+                    )
                 }
             }
         }

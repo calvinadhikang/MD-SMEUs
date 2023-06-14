@@ -42,13 +42,9 @@ import com.bangkit.smeus.ui.theme.SMEUsTheme
 @Composable
 fun ExploreScreen(
     modifier: Modifier = Modifier,
-    viewModel: ExploreViewModel = ExploreViewModel()
+    viewModel: ExploreViewModel = ExploreViewModel(),
+    navigateToDetail: (String) -> Unit
 ) {
-    var listDestinationFake = listOf<Destination>(
-        Destination(1, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(2, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(3, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-    )
     var listCategoryFake = listOf<Category>(
         Category(1, "Foods", false),
         Category(2,"Beverages", false),
@@ -135,15 +131,16 @@ fun ExploreScreen(
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ) {
-            items(items = smeList.value, key = { it -> it.indexPlace }) { it ->
+            items(items = smeList.value, key = { it -> it.indexPlace }) { sme ->
                 DestinationItem(
-                    id = it.indexPlace,
-                    image = it.image,
-                    name = it.nameSmes,
-                    goods = it.goods,
+                    id = sme.indexPlace,
+                    image = sme.image,
+                    name = sme.nameSmes,
+                    goods = sme.goods,
                     onClick = {
-
-                    }
+                        navigateToDetail(sme.indexPlace)
+                    },
+                    modifier = modifier.padding(end = 16.dp)
                 )
             }
         }
@@ -154,6 +151,6 @@ fun ExploreScreen(
 @Composable
 fun HomeScreenPreview() {
     SMEUsTheme {
-        ExploreScreen()
+        ExploreScreen(navigateToDetail = {})
     }
 }

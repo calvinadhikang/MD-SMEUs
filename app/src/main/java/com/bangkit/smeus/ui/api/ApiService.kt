@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.api
 
+import com.bangkit.smeus.ui.api.response.SimilarityResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -17,6 +18,17 @@ interface ApiService {
 //    fun login(
 //        @Body loginRequest: LoginRequest
 //    ): Call<LoginResponse>
+
+    @GET("similarity")
+    fun fetchSimilarSME(
+        @Query(value = "sme", encoded = false) smeName: String,
+        @Query(value = "limit", encoded = true) limit: Int = 4
+    ): Call<SimilarityResponse>
+
+    @GET("sme/{sme_id}")
+    fun fetchSMEbyId(
+        @Path(value = "sme_id", encoded = true) smeId: String
+    ): Call<DetailSMEResponse>
 
     @GET("sme")
     fun fetchSMEs(): Call<List<DetailSMEResponse>>
