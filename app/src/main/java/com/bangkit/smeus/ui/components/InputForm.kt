@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +35,7 @@ fun InputForm(
     onValueChange: (it: String) -> Unit,
     leadingIcon: @Composable () -> Unit?
 ) {
-    TextField(
+    OutlinedTextField(
         leadingIcon = {
             leadingIcon()
         },
@@ -53,16 +54,17 @@ fun InputForm(
         onValueChange = {
             onValueChange(it)
         },
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = Color.Black,
-            containerColor = Color.White,
+            containerColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent
+            unfocusedLabelColor = Color.Transparent,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+            focusedBorderColor = MaterialTheme.colorScheme.primary
         ),
+        shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
     )
 }
@@ -70,7 +72,7 @@ fun InputForm(
 @Preview(showBackground = true)
 @Composable
 fun TextFormPreview() {
-    MaterialTheme {
+    SMEUsTheme() {
         InputForm(
             text = "",
             label = "Input",

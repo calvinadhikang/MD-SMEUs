@@ -1,8 +1,10 @@
 package com.bangkit.smeus.ui.screen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,13 +20,25 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.TextFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.textInputServiceFactory
@@ -39,7 +53,9 @@ import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier
@@ -68,6 +84,15 @@ fun SearchScreen(
         Category(4,"> 50K", false),
     )
 
+    val categoryList = arrayOf("FnB", "Fashion", "Munchies", "Craft")
+    val priceRangeList = arrayOf("Select Range","< 25K", "25K - 50K", ">50K")
+
+    var expandedCategory by remember { mutableStateOf(false) }
+    var expandedPriceRange by remember { mutableStateOf(false) }
+
+    var selectedTextCategory by remember { mutableStateOf(categoryList[0]) }
+    var selectedTextPriceRange by remember { mutableStateOf(priceRangeList[0]) }
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -92,21 +117,94 @@ fun SearchScreen(
                 )
             }
         )
-        Column(
-            modifier = modifier.padding(bottom = 24.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp, top = 8.dp)
         ){
-            Spacer(modifier = modifier.height(8.dp))
-            Text(text = "Category List")
-            LazyRow() {
-                items(items = listCategoryFake, key = {it -> it.id}) {
-                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
+            Column(
+                modifier = modifier.weight(0.5F)
+            ) {
+                Text(
+                    text = "Select Category",
+                    fontWeight = FontWeight.SemiBold
+                )
+                Box() {
+                    ExposedDropdownMenuBox(
+                        expanded = expandedCategory,
+                        onExpandedChange = {
+                            expandedCategory = !expandedCategory
+                        }
+                    ) {
+                        TextField(
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                textColor = Color.White
+                            ),
+                            value = selectedTextCategory,
+                            onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategory) },
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expandedCategory,
+                            onDismissRequest = { expandedCategory = false }
+                        ) {
+                            categoryList.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedTextCategory = item
+                                        expandedCategory = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
-            Spacer(modifier = modifier.height(8.dp))
-            Text(text = "Price List")
-            LazyRow() {
-                items(items = listPriceFake, key = {it -> it.id}) {
-                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
+            Spacer(modifier = modifier.padding(8.dp))
+            Column(
+                modifier = modifier.weight(0.5F)
+            ) {
+                Text(
+                    text = "Select Price Range",
+                    fontWeight = FontWeight.SemiBold
+                )
+                Box() {
+                    ExposedDropdownMenuBox(
+                        expanded = expandedPriceRange,
+                        onExpandedChange = {
+                            expandedPriceRange = !expandedPriceRange
+                        }
+                    ) {
+                        TextField(
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                textColor = Color.White
+                            ),
+                            value = selectedTextPriceRange,
+                            onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPriceRange) },
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expandedPriceRange,
+                            onDismissRequest = { expandedPriceRange = false }
+                        ) {
+                            priceRangeList.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedTextPriceRange = item
+                                        expandedPriceRange = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -143,7 +241,7 @@ fun SearchScreen(
 @Preview(showBackground = true)
 @Composable
 fun SearchScreenPreview() {
-    MaterialTheme {
+    SMEUsTheme() {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
