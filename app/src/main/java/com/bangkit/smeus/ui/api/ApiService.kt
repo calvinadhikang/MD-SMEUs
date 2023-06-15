@@ -19,6 +19,11 @@ interface ApiService {
 //        @Body loginRequest: LoginRequest
 //    ): Call<LoginResponse>
 
+    @GET("user/{user_email}")
+    fun fetchUserPreference(
+        @Path(value = "user_email", encoded = true) user_email: String
+    ): Call<UserPreferenceResponse>
+
     @GET("similarity")
     fun fetchSimilarSME(
         @Query(value = "sme", encoded = false) smeName: String,

@@ -1,15 +1,22 @@
 package com.bangkit.smeus.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.bangkit.smeus.ui.api.LoginResponse
+import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.repository.SmeRepository
+import com.bangkit.smeus.ui.user.UserActivity
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,18 +29,32 @@ class MainViewModel(
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
-    fun login(email: String, password: String){
+    private var _userLogin = MutableStateFlow<UserPreferenceResponse>(UserPreferenceResponse())
+    val userLogin: StateFlow<UserPreferenceResponse> get() = _userLogin
+
+    fun login(email: String, password: String, context: Context){
         _loading.value = true
 
-        val client = ApiConfig.getApiService().login(email, password)
-        client.enqueue(object: Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+        val client = ApiConfig.getApiService().fetchUserPreference(email)
+        client.enqueue(object: Callback<UserPreferenceResponse> {
+            override fun onResponse(
+                call: Call<UserPreferenceResponse>,
+                response: Response<UserPreferenceResponse>
+            ) {
                 if (response.isSuccessful){
+                    val user: UserPreferenceResponse = response.body()!!
 
+                    if (user.email == email && user.password == password){
+                        //set user preference
+                        context.startActivity(Intent(context, UserActivity::class.java))
+                    }else{
+                        Toast.makeText(context, "Login Unsuccessful", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                _loading.value = false
             }
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            override fun onFailure(call: Call<UserPreferenceResponse>, t: Throwable) {
             }
         })
     }

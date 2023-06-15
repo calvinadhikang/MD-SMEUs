@@ -31,6 +31,33 @@ data class SimilarSmeResponseList(
     val resultFin: List<DetailSMEResponse>
 )
 
+data class UserPreferenceResponse(
+
+    @field:SerializedName("password")
+    val password: String? = null,
+
+    @field:SerializedName("generalCategory")
+    val generalCategory: Int? = null,
+
+    @field:SerializedName("phone")
+    val phone: String? = null,
+
+    @field:SerializedName("city")
+    val city: Int? = null,
+
+    @field:SerializedName("name")
+    val name: String? = null,
+
+    @field:SerializedName("rating")
+    val rating: Int? = null,
+
+    @field:SerializedName("priceRange")
+    val priceRange: Int? = null,
+
+    @field:SerializedName("email")
+    val email: String? = null
+)
+
 data class DetailSMEResponse(
 
     @field:SerializedName("image")

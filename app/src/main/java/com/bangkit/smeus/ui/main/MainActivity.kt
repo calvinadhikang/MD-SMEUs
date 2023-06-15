@@ -158,7 +158,7 @@ fun Main(
                 }
 
                 if (email != "" && password != ""){
-                    context.startActivity(Intent(context, UserActivity::class.java))
+                    viewModel.login(email, password, context)
                 }
             },
             modifier = modifier
