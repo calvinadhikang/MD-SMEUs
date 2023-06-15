@@ -126,7 +126,7 @@ fun ExploreScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier.fillMaxWidth()
         ) {
-            Text(text = "Recommended Destination", fontWeight = FontWeight.Bold, fontSize = 20.sp, modifier = modifier.weight(1F))
+            Text(text = "Recommended SMEs", fontWeight = FontWeight.Bold, fontSize = 20.sp, modifier = modifier.weight(1F))
             Text(text = "View All", color = Color.Gray)
         }
         LazyRow(

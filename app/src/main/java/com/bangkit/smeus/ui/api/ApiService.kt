@@ -19,6 +19,18 @@ interface ApiService {
 //        @Body loginRequest: LoginRequest
 //    ): Call<LoginResponse>
 
+    @GET("user/{user_email}/wishlist")
+    fun fetchWishlistUser(
+        @Path(value = "user_email", encoded = true) user_email: String,
+    ): Call<SimilarityResponse>
+
+    @FormUrlEncoded
+    @PUT("wishlist")
+    fun updateWishlist(
+        @Field("email") email:String,
+        @Field("index") smeId:String,
+    ): Call<RegisterResponse>
+
     @FormUrlEncoded
     @PUT("user/{user_email}")
     fun updateUserPreference(

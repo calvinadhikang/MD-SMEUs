@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
@@ -57,6 +58,7 @@ import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bangkit.smeus.R
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.IconText
 
@@ -68,13 +70,25 @@ fun DetailScreen(
     navigateBack : () -> Unit,
     navigateToDetail: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val user = UserPreference(context).getUser()
+
+    val sme = viewModel.sme.collectAsState()
+    val similar = viewModel.similarSme.collectAsState()
+    val isFavorite = viewModel.isFavorite.collectAsState()
+    viewModel.fetchSME(smeId, user.email)
+    viewModel.checkIsFavorite(smeId, user.email)
+
+    var iconFavorite = if (isFavorite.value) {
+        Icons.Default.Favorite
+    }else{
+        Icons.Default.FavoriteBorder
+    }
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
-        val sme = viewModel.sme.collectAsState()
-        val similar = viewModel.similarSme.collectAsState()
-        viewModel.fetchSME(smeId)
 
         var listCategoryFake = listOf<Category>(
             Category(1, "Foods", false),
@@ -113,7 +127,17 @@ fun DetailScreen(
                     fontWeight = FontWeight.ExtraBold,
                     modifier = modifier.weight(1F)
                 )
-                Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "", modifier = modifier.size(40.dp))
+                Icon(
+                    imageVector = iconFavorite,
+                    tint = Color.Red,
+                    contentDescription = "",
+                    modifier = modifier
+                        .size(40.dp)
+                        .clickable {
+                            viewModel.updateWishlist(context)
+                            viewModel.checkIsFavorite(smeId, user.email)
+                        }
+                )
             }
             Text(
                 text = sme.value.priceRange,
@@ -124,8 +148,8 @@ fun DetailScreen(
                 modifier = modifier
                     .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
             ) {
-                IconText(text = sme.value.city, icon = Icons.Default.LocationOn)
-                IconText(text = sme.value.goods, iconInt = R.drawable.baseline_category_24, icon = Icons.Default.FavoriteBorder)
+                IconText(text = "city", icon = Icons.Default.LocationOn)
+                IconText(text = "goods", iconInt = R.drawable.baseline_category_24, icon = iconFavorite)
             }
             Text(
                 text = sme.value.description,

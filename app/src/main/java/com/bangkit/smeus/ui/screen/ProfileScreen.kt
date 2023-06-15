@@ -1,6 +1,7 @@
 package com.bangkit.smeus.ui.screen
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,9 +35,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.components.ButtonForm
+import com.bangkit.smeus.ui.components.IconText
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.main.Main
+import com.bangkit.smeus.ui.main.MainActivity
 
 @Composable
 fun ProfileScreen(
@@ -47,9 +52,11 @@ fun ProfileScreen(
             .padding(16.dp),
     ) {
         val context = LocalContext.current
+        val preference = UserPreference(context)
+        val user = preference.getUser()
 
-        var name by rememberSaveable { mutableStateOf("") }
-        var email by rememberSaveable { mutableStateOf("") }
+        var name by rememberSaveable { mutableStateOf(user.name) }
+        var email by rememberSaveable { mutableStateOf(user.email) }
         var phone by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
         var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -76,6 +83,17 @@ fun ProfileScreen(
             modifier = modifier.fillMaxWidth()
         )
         Spacer(modifier = modifier.padding(16.dp))
+        //Info User Email
+        Text(text = "Email :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+        IconText(text = user.email, icon = Icons.Default.Email)
+        //Info User Name
+        Text(text = "Name :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+        IconText(text = user.name, icon = Icons.Default.AccountCircle)
+        //Info User Phone
+        Text(text = "Phone :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+        IconText(text = user.phone, icon = Icons.Default.Phone)
+        Spacer(modifier = modifier.padding(16.dp))
+        Text(text = "Your Preferences :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary, fontSize = 23.sp)
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = modifier.padding(bottom = 8.dp)
@@ -138,7 +156,7 @@ fun ProfileScreen(
         }
         ButtonForm(
             text = "Save Profile",
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             onClick = {
                 var valid = true
 
@@ -188,6 +206,19 @@ fun ProfileScreen(
                 } else {
                     Toast.makeText(context, "Registered Unsuccessful", Toast.LENGTH_SHORT).show()
                 }
+            },
+            modifier = modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(top = 8.dp, bottom = 16.dp)
+        )
+        ButtonForm(
+            text = "Logout",
+            color = Color.Red,
+            onClick = {
+                preference.clearUser()
+                val activity = context as Activity
+                activity.startActivity(Intent(context, MainActivity::class.java))
             },
             modifier = modifier
                 .fillMaxWidth()
