@@ -10,7 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,14 +22,19 @@ import com.bangkit.smeus.R
 fun IconText(
     modifier: Modifier = Modifier,
     text: String,
-    icon: ImageVector
+    icon: ImageVector,
+    iconInt:Int? = null
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.padding(4.dp)
     ) {
-        Icon(imageVector = icon, contentDescription = "")
-        Text(text = text, fontSize = 12.sp)
+        if (iconInt == null){
+            Icon(imageVector = icon, contentDescription = "")
+        }else{
+            Icon(painter = painterResource(id = iconInt), contentDescription = "", tint = Color.White)
+        }
+        Text(text = text, fontSize = 10.sp, color = Color.White, softWrap = true)
     }
 }
 
