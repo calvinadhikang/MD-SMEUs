@@ -55,9 +55,6 @@ fun ProfileScreen(
         val preference = UserPreference(context)
         val user = preference.getUser()
 
-        var name by rememberSaveable { mutableStateOf(user.name) }
-        var email by rememberSaveable { mutableStateOf(user.email) }
-        var phone by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
         var confirmPassword by rememberSaveable { mutableStateOf("") }
 
@@ -83,54 +80,24 @@ fun ProfileScreen(
             modifier = modifier.fillMaxWidth()
         )
         Spacer(modifier = modifier.padding(16.dp))
+
         //Info User Email
         Text(text = "Email :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
-        IconText(text = user.email, icon = Icons.Default.Email)
+        IconText(text = user.email, icon = Icons.Default.Email, textColor = Color.Black, iconTint = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
         //Info User Name
         Text(text = "Name :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
-        IconText(text = user.name, icon = Icons.Default.AccountCircle)
+        IconText(text = user.name, icon = Icons.Default.AccountCircle, textColor = Color.Black, iconTint = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
         //Info User Phone
         Text(text = "Phone :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
-        IconText(text = user.phone, icon = Icons.Default.Phone)
+        IconText(text = user.phone, icon = Icons.Default.Phone, textColor = Color.Black, iconTint = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
+
         Spacer(modifier = modifier.padding(16.dp))
+
         Text(text = "Your Preferences :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary, fontSize = 23.sp)
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = modifier.padding(bottom = 8.dp)
         ) {
-            InputForm(
-                text = name,
-                label = "Name",
-                errorText = nameErrorText,
-                onValueChange = {
-                    name = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
-                }
-            )
-            InputForm(
-                text = email,
-                label = "Email",
-                errorText = emailErrorText,
-                onValueChange = {
-                    email = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Email, contentDescription = "")
-                }
-            )
-            InputForm(
-                text = phone,
-                label = "Phone",
-                errorText = phoneErrorText,
-                onValueChange = {
-                    phone = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Phone, contentDescription = "")
-                }
-            )
             InputForm(
                 text = password,
                 label = "Password",
@@ -160,24 +127,6 @@ fun ProfileScreen(
             onClick = {
                 var valid = true
 
-                if (name == "") {
-                    nameErrorText = "Password cannot be null"
-                } else {
-                    nameErrorText = ""
-                }
-
-                if (email == "") {
-                    emailErrorText = "Password cannot be null"
-                } else {
-                    emailErrorText = ""
-                }
-
-                if (phone == "") {
-                    phoneErrorText = "Password cannot be null"
-                } else {
-                    phoneErrorText = ""
-                }
-
                 if (password == "") {
                     passwordErrorText = "Password cannot be null"
                 } else {
@@ -195,7 +144,7 @@ fun ProfileScreen(
                         "Password must be the same with Confirmation Password"
                 }
 
-                if (name == "" || email == "" || phone == "" || password == "" || confirmPassword == "" || password != confirmPassword) {
+                if (password == "" || confirmPassword == "" || password != confirmPassword) {
                     valid = false
                 }
 
@@ -209,8 +158,8 @@ fun ProfileScreen(
             },
             modifier = modifier
                 .fillMaxWidth()
-                .height(80.dp)
-                .padding(top = 8.dp, bottom = 16.dp)
+                .padding(top = 16.dp, bottom = 8.dp)
+                .height(50.dp)
         )
         ButtonForm(
             text = "Logout",
@@ -222,8 +171,7 @@ fun ProfileScreen(
             },
             modifier = modifier
                 .fillMaxWidth()
-                .height(80.dp)
-                .padding(top = 8.dp, bottom = 16.dp)
+                .height(50.dp)
         )
     }
 }

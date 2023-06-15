@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -79,7 +80,7 @@ fun FavoriteScreen(
             errorText = "",
             onValueChange = {
                 searchText = it
-                viewModel.fetchSME(user.email, it)
+                viewModel.filterSME(it)
             },
             leadingIcon = {
                 Icon(
@@ -97,8 +98,8 @@ fun FavoriteScreen(
             modifier = modifier
                 .fillMaxWidth()
         )
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(8.dp),
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)

@@ -23,32 +23,46 @@ class FavoriteViewModel : ViewModel() {
     private val _smeList = MutableStateFlow<SnapshotStateList<ResultFinItem>>(mutableStateListOf())
     val smeList: StateFlow<SnapshotStateList<ResultFinItem>> get() = _smeList
 
-    fun fetchSME(email: String, key:String = "") {
-        val client = ApiConfig.getApiService().fetchWishlistUser(email)
-        client.enqueue(object : Callback<SimilarityResponse> {
-            override fun onResponse(
-                call: Call<SimilarityResponse>,
-                response: Response<SimilarityResponse>
-            ) {
-                if (response.isSuccessful) {
-                    var resultList = response.body()!!.resultFin!!
+    private var rawList: List<ResultFinItem> = listOf()
 
-                    var mutableList = mutableStateListOf<ResultFinItem>()
-                    resultList.forEachIndexed { index, detailSMEResponse ->
-                        if (key != ""){
-                            if (key.contains(detailSMEResponse!!.nameSmes, ignoreCase = true)){
-                                mutableList.add(detailSMEResponse!!)
-                            }
-                        }else{
-                            mutableList.add(detailSMEResponse!!)
-                        }
+    fun fetchSME(email: String) {
+        if (init == 0) {
+            val client = ApiConfig.getApiService().fetchWishlistUser(email)
+            client.enqueue(object : Callback<SimilarityResponse> {
+                override fun onResponse(
+                    call: Call<SimilarityResponse>,
+                    response: Response<SimilarityResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        var resultList = response.body()!!.resultFin!!
+                        rawList = resultList as List<ResultFinItem>
+                        filterSME()
+                        init++
                     }
-                    _smeList.value = mutableList
                 }
-            }
 
-            override fun onFailure(call: Call<SimilarityResponse>, t: Throwable) {
+                override fun onFailure(call: Call<SimilarityResponse>, t: Throwable) {
+                }
+            })
+        }
+    }
+
+    fun filterSME(key:String = ""){
+        var mutableList = mutableStateListOf<ResultFinItem>()
+        rawList.forEachIndexed { index, detailSMEResponse ->
+            if (key != ""){
+                if (detailSMEResponse!!.nameSmes.contains(key, ignoreCase = true)){
+                    mutableList.add(detailSMEResponse!!)
+                }
+            }else{
+                mutableList.add(detailSMEResponse!!)
             }
-        })
+        }
+        Log.e("LIST_FILTER_COUNT", mutableList.size.toString())
+        _smeList.value = mutableList
+    }
+
+    companion object{
+        var init = 0
     }
 }

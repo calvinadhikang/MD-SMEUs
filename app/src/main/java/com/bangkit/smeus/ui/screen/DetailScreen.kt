@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -40,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -146,11 +148,36 @@ fun DetailScreen(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier
-                    .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 16.dp)
             ) {
-                IconText(text = "city", icon = Icons.Default.LocationOn)
-                IconText(text = "goods", iconInt = R.drawable.baseline_category_24, icon = iconFavorite)
+                Row(
+                    modifier = modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .padding(8.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.LocationOn, contentDescription = "", tint = Color.White, modifier = modifier.padding(end = 8.dp))
+                    Text(text = sme.value.city, color = Color.White)
+                }
+                Row(
+                    modifier = modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .padding(8.dp)
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_category_24), contentDescription = "", tint = Color.White, modifier = modifier.padding(end = 8.dp))
+                    Text(text = sme.value.goods, color = Color.White)
+                }
             }
+//            IconText(text = "city", icon = Icons.Default.LocationOn)
+//            Row(
+//                modifier = modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
+//            ) {
+//                IconText(text = "goods", iconInt = R.drawable.baseline_category_24, icon = iconFavorite)
+//            }
             Text(
                 text = sme.value.description,
                 modifier = modifier.padding(bottom = 24.dp)
