@@ -1,14 +1,7 @@
 package com.bangkit.smeus.ui.repository
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import com.bangkit.smeus.ui.api.DetailSMEResponse
-import com.bangkit.smeus.ui.api.SmeResponseList
 import com.example.storyapp.api.ApiConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SmeRepository {
     fun getSMEs(): List<DetailSMEResponse> {

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bangkit.smeus.ui.api.RegisterResponse
 import com.example.storyapp.api.ApiConfig

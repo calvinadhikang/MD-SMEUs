@@ -15,12 +15,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -32,13 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.components.CategoryItem
 import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
-import com.bangkit.smeus.ui.model.Destination
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 @Composable

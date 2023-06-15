@@ -3,12 +3,8 @@ package com.bangkit.smeus.ui.screen
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bangkit.smeus.ui.api.DetailSMEResponse
-import com.bangkit.smeus.ui.api.RegisterResponse
-import com.bangkit.smeus.ui.api.SmeResponseList
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

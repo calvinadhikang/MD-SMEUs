@@ -1,7 +1,6 @@
 package com.bangkit.smeus.ui
 
 import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import com.bangkit.smeus.ui.api.RegisterResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.model.Category
@@ -11,7 +10,6 @@ import com.example.storyapp.api.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.PasswordAuthentication
 
 internal class UserPreference(context: Context) {
 

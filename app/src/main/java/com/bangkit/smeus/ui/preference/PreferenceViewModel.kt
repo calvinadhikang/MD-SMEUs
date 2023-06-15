@@ -1,16 +1,11 @@
 package com.bangkit.smeus.ui.preference
 
-import android.media.Rating
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.City
 import com.bangkit.smeus.ui.model.PriceRange
-import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import retrofit2.Callback
 
 class PreferenceViewModel: ViewModel() {
 

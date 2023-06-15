@@ -2,13 +2,10 @@ package com.bangkit.smeus.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,25 +14,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -44,23 +37,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bangkit.smeus.R
-import com.bangkit.smeus.ui.components.ButtonForm
-import com.bangkit.smeus.ui.components.ButtonFormPreview
+import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.register.RegisterActivity
 import com.bangkit.smeus.ui.repository.SmeRepository
 import com.bangkit.smeus.ui.theme.SMEUsTheme
-import com.bangkit.smeus.ui.user.UserActivity
-import java.util.Objects
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SMEUsTheme() {
+            SMEUsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -192,7 +181,7 @@ fun Main(
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
-    SMEUsTheme() {
+    SMEUsTheme {
         Main()
     }
 }
