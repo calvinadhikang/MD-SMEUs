@@ -23,8 +23,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.textInputServiceFactory
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,34 +41,25 @@ import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bangkit.smeus.ui.UserPreference
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 
 @Composable
 fun FavoriteScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: FavoriteViewModel = viewModel(),
+    navigateToDetail: (String) -> Unit
 ){
-    var listDestinationFake = listOf<Destination>(
-        Destination(1, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(2, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(3, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(4, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(5, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(6, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(7, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(8, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-    )
-    var listCategoryFake = listOf<Category>(
-        Category(1, "Foods", false),
-        Category(2,"Beverages", false),
-        Category(3,"Craft", false),
-        Category(4,"Goods", false),
-        Category(5,"OMG", false),
-        Category(6,"Bebas", false)
-    )
-    var listPriceFake = listOf<Category>(
-        Category(2,"< 25K", false),
-        Category(3,"25-50K", false),
-        Category(4,"> 50K", false),
-    )
+    val context = LocalContext.current
+    val preference = UserPreference(context)
+    val user = preference.getUser()
+    
+    var searchText by rememberSaveable { mutableStateOf("") }
+
+    val sme = viewModel.smeList.collectAsState()
+    viewModel.fetchSME(user.email)
 
     Column(
         modifier = modifier
@@ -79,10 +74,13 @@ fun FavoriteScreen(
         )
         Spacer(modifier = modifier.height(16.dp))
         InputForm(
-            text = "",
+            text = searchText,
             label = "Search",
             errorText = "",
-            onValueChange = {},
+            onValueChange = {
+                searchText = it
+                viewModel.fetchSME(user.email, it)
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -90,26 +88,8 @@ fun FavoriteScreen(
                 )
             }
         )
-        Column(
-            modifier = modifier.padding(bottom = 24.dp)
-        ){
-            Spacer(modifier = modifier.height(8.dp))
-            Text(text = "Category List")
-            LazyRow() {
-                items(items = listCategoryFake, key = {it -> it.id}) {
-                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
-                }
-            }
-            Spacer(modifier = modifier.height(8.dp))
-            Text(text = "Price List")
-            LazyRow() {
-                items(items = listPriceFake, key = {it -> it.id}) {
-                    CategoryItem(id = it.id, text = it.text, selected = it.selected, onClick = {}, modifier=modifier.padding(end = 6.dp))
-                }
-            }
-        }
         Text(
-            text = "Showing 8 Results",
+            text = "Showing ${sme.value.size} Results",
             color = Color.Gray,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
@@ -117,23 +97,24 @@ fun FavoriteScreen(
             modifier = modifier
                 .fillMaxWidth()
         )
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(200.dp),
-            contentPadding = PaddingValues(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(8.dp),
             modifier = modifier
+                .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ){
-//            items(items = listDestinationFake, key = {it -> it.id}){
-//                DestinationItem(
-//                    image = it.photo,
-//                    name = it.name,
-//                    location = it.location,
-//                    category = it.category,
-//                    price = it.price,
-//                    onClick = { }
-//                )
-//            }
+            items(items = sme.value, key = {it -> it.indexPlace}){sme ->
+                DestinationItem(
+                    id = sme.indexPlace,
+                    image = sme.image,
+                    name = sme.nameSmes,
+                    goods = sme.goods,
+                    onClick = {
+                        navigateToDetail(sme.indexPlace)
+                    },
+                    modifier = modifier.padding(end = 16.dp)
+                )
+            }
         }
     }
 }
@@ -146,7 +127,7 @@ fun FavoriteScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ){
-            FavoriteScreen()
+            FavoriteScreen(navigateToDetail = {})
         }
     }
 }

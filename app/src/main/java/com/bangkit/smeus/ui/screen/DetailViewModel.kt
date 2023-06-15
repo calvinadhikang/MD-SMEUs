@@ -103,6 +103,10 @@ class DetailViewModel : ViewModel() {
         })
     }
 
+    fun toggleFavorite(){
+        _isFavorite.value = !_isFavorite.value
+    }
+
     fun updateWishlist(context: Context){
         val user = UserPreference(context).getUser()
 

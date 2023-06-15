@@ -9,16 +9,6 @@ import retrofit2.http.*
 
 interface ApiService {
 
-//    @POST("register")
-//    fun register(
-//        @Body registerRequest: RegisterRequest
-//    ): Call<RegisterResponse>
-//
-//    @POST("login")
-//    fun login(
-//        @Body loginRequest: LoginRequest
-//    ): Call<LoginResponse>
-
     @GET("user/{user_email}/wishlist")
     fun fetchWishlistUser(
         @Path(value = "user_email", encoded = true) user_email: String,

@@ -135,7 +135,7 @@ fun DetailScreen(
                         .size(40.dp)
                         .clickable {
                             viewModel.updateWishlist(context)
-                            viewModel.checkIsFavorite(smeId, user.email)
+                            viewModel.toggleFavorite()
                         }
                 )
             }

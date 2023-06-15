@@ -93,7 +93,11 @@ fun User(
                     SearchScreen()
                 }
                 composable(Screen.Favorite.route){
-                    FavoriteScreen()
+                    FavoriteScreen(
+                        navigateToDetail = {smeId ->
+                            navController.navigate(Screen.Detail.createRoute(smeId))
+                        }
+                    )
                 }
                 composable(Screen.Profile.route){
                     ProfileScreen()
