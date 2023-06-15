@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +23,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
@@ -37,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +58,7 @@ import com.bangkit.smeus.ui.theme.SMEUsTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.components.DestinationItem
+import com.bangkit.smeus.ui.components.IconText
 
 @Composable
 fun DetailScreen(
@@ -96,37 +102,30 @@ fun DetailScreen(
                     }
             )
         }
-
-
         Column(
             modifier = modifier.padding(16.dp)
         ) {
-            Text(
-                text = sme.value.nameSmes,
-                fontSize = 32.sp,
-                lineHeight = 40.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
+            Row() {
+                Text(
+                    text = sme.value.nameSmes,
+                    fontSize = 32.sp,
+                    lineHeight = 40.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = modifier.weight(1F)
+                )
+                Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "", modifier = modifier.size(40.dp))
+            }
             Text(
                 text = sme.value.priceRange,
                 fontSize = 26.sp,
             )
-            LazyRow(
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
                 modifier = modifier
                     .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
             ) {
-                items(items = listCategoryFake, key = { it -> it.id }) { it ->
-                    CategoryItem(
-                        id = it.id,
-                        text = it.text,
-                        selected = it.selected,
-                        onClick = { it ->
-
-                        }
-                    )
-                }
+                IconText(text = sme.value.city, icon = Icons.Default.LocationOn)
+                IconText(text = sme.value.goods, iconInt = R.drawable.baseline_category_24, icon = Icons.Default.FavoriteBorder)
             }
             Text(
                 text = sme.value.description,

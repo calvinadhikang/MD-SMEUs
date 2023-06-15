@@ -53,6 +53,7 @@ import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
+import com.bangkit.smeus.ui.model.PriceRange
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -84,14 +85,14 @@ fun SearchScreen(
         Category(4,"> 50K", false),
     )
 
-    val categoryList = arrayOf("FnB", "Fashion", "Munchies", "Craft")
-    val priceRangeList = arrayOf("Select Range","< 25K", "25K - 50K", ">50K")
+    val categoryList = Category.listCategory
+    val priceRangeList = PriceRange.listPriceRange
 
     var expandedCategory by remember { mutableStateOf(false) }
     var expandedPriceRange by remember { mutableStateOf(false) }
 
-    var selectedTextCategory by remember { mutableStateOf(categoryList[0]) }
-    var selectedTextPriceRange by remember { mutableStateOf(priceRangeList[0]) }
+    var selectedTextCategory by remember { mutableStateOf(categoryList[0].text) }
+    var selectedTextPriceRange by remember { mutableStateOf(priceRangeList[0].text) }
 
     Column(
         modifier = modifier
@@ -153,9 +154,9 @@ fun SearchScreen(
                         ) {
                             categoryList.forEach { item ->
                                 DropdownMenuItem(
-                                    text = { Text(text = item) },
+                                    text = { Text(text = item.text) },
                                     onClick = {
-                                        selectedTextCategory = item
+                                        selectedTextCategory = item.text
                                         expandedCategory = false
                                     }
                                 )
@@ -196,9 +197,9 @@ fun SearchScreen(
                         ) {
                             priceRangeList.forEach { item ->
                                 DropdownMenuItem(
-                                    text = { Text(text = item) },
+                                    text = { Text(text = item.text) },
                                     onClick = {
-                                        selectedTextPriceRange = item
+                                        selectedTextPriceRange = item.text
                                         expandedPriceRange = false
                                     }
                                 )

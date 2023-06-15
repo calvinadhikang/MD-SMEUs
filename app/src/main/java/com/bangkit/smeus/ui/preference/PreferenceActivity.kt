@@ -2,12 +2,15 @@ package com.bangkit.smeus.ui.preference
 
 import android.app.Activity
 import android.content.Intent
+import android.media.Rating
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,12 +41,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bangkit.smeus.ui.model.Category
+import com.bangkit.smeus.ui.model.City
+import com.bangkit.smeus.ui.model.PriceRange
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 import com.bangkit.smeus.ui.user.UserActivity
 
@@ -75,17 +82,17 @@ fun PreferenceScreen(
         when (state) {
             0 -> {
                 LocationScreen(){
-                    state += 1
+                    state += it
                 }
             }
             1 -> {
                 CategoryScreen() {
-                    state += 1
+                    state += it
                 }
             }
             2 -> {
                 PriceRangeScreen() {
-                    state += 1
+                    state += it
                 }
             }
             3 -> {
@@ -102,16 +109,18 @@ fun PreferenceScreen(
 @Composable
 fun LocationScreen(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: (it: Int) -> Unit
 ){
-    val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
+    val cityList = City.listCity
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
+    var selectedText by remember { mutableStateOf(cityList[0].text) }
 
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Column() {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = "Choose Your Location",
                 textAlign = TextAlign.Center,
@@ -137,12 +146,284 @@ fun LocationScreen(
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = modifier.fillMaxWidth()
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        coffeeDrinks.forEach { item ->
+                        cityList.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item.text) },
+                                onClick = {
+                                    selectedText = item.text
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Button(
+            onClick = { onClick(1) },
+            content = {
+                Text(
+                    text = "Next",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            },
+            modifier = modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryScreen(
+    modifier: Modifier = Modifier,
+    onClick: (it: Int) -> Unit
+){
+    val categoryList = Category.listCategory
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(categoryList[0].text) }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Category of SME",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 32.sp,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp)
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+                    TextField(
+                        value = selectedText,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = modifier.fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        categoryList.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item.text) },
+                                onClick = {
+                                    selectedText = item.text
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Row(
+            modifier =  modifier.align(Alignment.BottomCenter)
+        ) {
+            Button(
+                onClick = { onClick(-1) },
+                content = {
+                    Text(
+                        text = "Back",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                ),
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 24.dp, end = 12.dp)
+            )
+            Button(
+                onClick = { onClick(1) },
+                content = {
+                    Text(
+                        text = "Next",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 12.dp, end = 24.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun PriceRangeScreen(
+    modifier: Modifier = Modifier,
+    onClick: (it: Int) -> Unit
+){
+    val priceRangeList = PriceRange.listPriceRange
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(priceRangeList[0].text) }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Price Range",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 32.sp,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp)
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+                    TextField(
+                        value = selectedText,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = modifier.fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        priceRangeList.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item.text) },
+                                onClick = {
+                                    selectedText = item.text
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Row(
+            modifier =  modifier.align(Alignment.BottomCenter)
+        ) {
+            Button(
+                onClick = { onClick(-1) },
+                content = {
+                    Text(
+                        text = "Back",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                ),
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 24.dp, end = 12.dp)
+            )
+            Button(
+                onClick = { onClick(1) },
+                content = {
+                    Text(
+                        text = "Next",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 12.dp, end = 24.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun RatingScreen(
+    modifier: Modifier = Modifier,
+    onClick: (it: Int) -> Unit
+){
+    val ratingList = listOf<String>("1","2","3","4","5")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(ratingList[0]) }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Choose Rating",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 32.sp,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp)
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+                    TextField(
+                        value = selectedText,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = modifier.fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        ratingList.forEach { item ->
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
@@ -156,118 +437,10 @@ fun LocationScreen(
             }
         }
         Button(
-            onClick = { onClick() },
+            onClick = { onClick(1) },
             content = {
                 Text(
-                    text = "Next",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-        )
-    }
-}
-
-@Composable
-fun CategoryScreen(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-){
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column() {
-            Text(
-                text = "Category of SME",
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-        }
-        Button(
-            onClick = { onClick() },
-            content = {
-                Text(
-                text = "Next",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-        )
-    }
-}
-
-@Composable
-fun PriceRangeScreen(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-){
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column() {
-            Text(
-                text = "Price Range",
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-        }
-        Button(
-            onClick = { onClick() },
-            content = {
-                Text(
-                    text = "Next",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-        )
-    }
-}
-
-@Composable
-fun RatingScreen(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-){
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column() {
-            Text(
-                text = "Choose Rating",
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-        }
-        Button(
-            onClick = { onClick() },
-            content = {
-                Text(
-                    text = "Next",
+                    text = "Finish",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                 )

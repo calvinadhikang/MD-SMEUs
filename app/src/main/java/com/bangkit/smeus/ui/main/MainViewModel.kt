@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.main
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.bangkit.smeus.ui.api.LoginResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
+import com.bangkit.smeus.ui.preference.PreferenceActivity
 import com.bangkit.smeus.ui.repository.SmeRepository
 import com.bangkit.smeus.ui.user.UserActivity
 import com.example.storyapp.api.ApiConfig
@@ -35,6 +37,23 @@ class MainViewModel(
     fun login(email: String, password: String, context: Context){
         _loading.value = true
 
+        val client = ApiConfig.getApiService().login(email, password)
+        client.enqueue(object: Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.code() == 400){
+                    Toast.makeText(context, "Login Unsuccessful", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
+                    userPreference(email, context)
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            }
+        })
+    }
+
+    fun userPreference(email: String, context: Context){
         val client = ApiConfig.getApiService().fetchUserPreference(email)
         client.enqueue(object: Callback<UserPreferenceResponse> {
             override fun onResponse(
@@ -44,11 +63,11 @@ class MainViewModel(
                 if (response.isSuccessful){
                     val user: UserPreferenceResponse = response.body()!!
 
-                    if (user.email == email && user.password == password){
-                        //set user preference
-                        context.startActivity(Intent(context, UserActivity::class.java))
+                    val activity = context as Activity
+                    if (user.city == 0){
+                        activity.startActivity(Intent(context, PreferenceActivity::class.java))
                     }else{
-                        Toast.makeText(context, "Login Unsuccessful", Toast.LENGTH_SHORT).show()
+                        activity.startActivity(Intent(context, UserActivity::class.java))
                     }
                 }
                 _loading.value = false
