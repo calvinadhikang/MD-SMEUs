@@ -18,7 +18,7 @@ class ExploreViewModel : ViewModel() {
     private val _smeList = MutableStateFlow<SnapshotStateList<DetailSMEResponse>>(mutableStateListOf())
     val smeList: StateFlow<SnapshotStateList<DetailSMEResponse>> get() = _smeList
 
-    private var rawList: List<ResultFinItem> = listOf()
+    private var rawList: List<DetailSMEResponse> = listOf()
 
     fun fetchSME() {
         val client = ApiConfig.getApiService().fetchSMEs()
@@ -27,18 +27,11 @@ class ExploreViewModel : ViewModel() {
                 call: Call<List<DetailSMEResponse>>,
                 response: Response<List<DetailSMEResponse>>
             ) {
-                try {
-                    if (response.isSuccessful) {
-                        var resultList = response.body()!!
+                if (response.isSuccessful) {
+                    var resultList = response.body()!!
+                    rawList = resultList
 
-                        var mutableList = mutableStateListOf<DetailSMEResponse>()
-                        resultList.forEachIndexed { index, detailSMEResponse ->
-                            mutableList.add(detailSMEResponse)
-                        }
-                        _smeList.value = mutableList
-                    }
-                } catch (e: Exception) {
-                    Log.e("ERROR_FETCH_SME_LIST", e.message.toString())
+                    filterSME()
                 }
             }
 
@@ -46,5 +39,20 @@ class ExploreViewModel : ViewModel() {
             }
 
         })
+    }
+
+    fun filterSME(key:String = ""){
+        var mutableList = mutableStateListOf<DetailSMEResponse>()
+        rawList.forEachIndexed { index, detailSMEResponse ->
+            if (key != ""){
+                if (detailSMEResponse.nameSmes.contains(key, ignoreCase = true)){
+                    mutableList.add(detailSMEResponse)
+                }
+            }else{
+                mutableList.add(detailSMEResponse)
+            }
+        }
+        Log.e("LIST_FILTER_COUNT", mutableList.size.toString())
+        _smeList.value = mutableList
     }
 }

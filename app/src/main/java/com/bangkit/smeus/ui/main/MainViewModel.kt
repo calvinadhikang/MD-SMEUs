@@ -7,21 +7,17 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.api.LoginResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.preference.PreferenceActivity
-import com.bangkit.smeus.ui.repository.SmeRepository
 import com.bangkit.smeus.ui.user.UserActivity
 import com.example.storyapp.api.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel(
-    private val repository: SmeRepository
-): ViewModel() {
+class MainViewModel: ViewModel() {
 
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
@@ -86,15 +82,5 @@ class MainViewModel(
                 activity.startActivity(Intent(context, UserActivity::class.java))
             }
         }
-    }
-}
-
-class ViewModelFactory(private val repository: SmeRepository): ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)){
-            return MainViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel Class: " + modelClass.name)
     }
 }

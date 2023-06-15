@@ -6,9 +6,9 @@ class PriceRange(
 ) {
     companion object{
         val listPriceRange: List<PriceRange> = listOf(
-            PriceRange(0, "25K - 50K"),
-            PriceRange(0, "< 25K"),
-            PriceRange(0, "> 50K"),
+            PriceRange(0, "25.000-50.000"),
+            PriceRange(0, "<25.000"),
+            PriceRange(0, ">50.000"),
         )
     }
 }

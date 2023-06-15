@@ -42,7 +42,6 @@ import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.components.ButtonFormWithLoading
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.register.RegisterActivity
-import com.bangkit.smeus.ui.repository.SmeRepository
 import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 class MainActivity : ComponentActivity() {
@@ -64,9 +63,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Main(
-    viewModel: MainViewModel = viewModel(factory = ViewModelFactory(
-        SmeRepository()
-    )),
+    viewModel: MainViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current

@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.components.CategoryItem
 import com.bangkit.smeus.ui.components.DestinationItem
@@ -45,11 +46,6 @@ fun ExploreScreen(
     navigateToDetail: (String) -> Unit,
     navigateToSearch: (String) -> Unit,
 ) {
-    var listCategoryFake = listOf<Category>(
-        Category(1, "Foods", false),
-        Category(2,"Beverages", false),
-        Category(3,"Craft", false)
-    )
     var searchText by rememberSaveable { mutableStateOf("") }
 
     val smeList = viewModel.smeList.collectAsState(emptyList())
@@ -86,7 +82,9 @@ fun ExploreScreen(
             text = searchText,
             label = "Search",
             errorText = "",
-            onValueChange = { searchText = it},
+            onValueChange = {
+                searchText = it
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -111,15 +109,8 @@ fun ExploreScreen(
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ) {
-            items(items = listCategoryFake, key = { it -> it.id }) { it ->
-                CategoryItem(
-                    id = it.id,
-                    text = it.text,
-                    selected = it.selected,
-                    onClick = { it ->
-
-                    }
-                )
+            items(items = Category.listCategory) {
+                CategoryItem(text = it.text, image = it.image, onClick = {})
             }
         }
         Spacer(modifier = modifier.height(16.dp))
@@ -132,7 +123,6 @@ fun ExploreScreen(
         }
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(8.dp),
             modifier = modifier
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ) {
@@ -145,7 +135,6 @@ fun ExploreScreen(
                     onClick = {
                         navigateToDetail(sme.indexPlace)
                     },
-                    modifier = modifier.padding(end = 16.dp)
                 )
             }
         }

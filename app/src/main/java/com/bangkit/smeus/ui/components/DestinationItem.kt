@@ -45,6 +45,7 @@ fun DestinationItem(
             contentDescription = image,
             modifier = modifier
                 .clip(RoundedCornerShape(16.dp))
+                .background(Color.LightGray)
                 .fillMaxWidth()
                 .height(265.dp)
         )

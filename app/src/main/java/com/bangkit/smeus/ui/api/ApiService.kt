@@ -45,7 +45,11 @@ interface ApiService {
     ): Call<DetailSMEResponse>
 
     @GET("sme")
-    fun fetchSMEs(): Call<List<DetailSMEResponse>>
+    fun fetchSMEs(
+        @Query(value = "city") city: String = "",
+        @Query(value = "general_category") category: String = "",
+        @Query(value = "price_range") price_range: String = "",
+    ): Call<List<DetailSMEResponse>>
 
     @FormUrlEncoded
     @POST("register")

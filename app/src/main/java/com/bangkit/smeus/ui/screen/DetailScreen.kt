@@ -72,13 +72,6 @@ fun DetailScreen(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
-
-        var listCategoryFake = listOf<Category>(
-            Category(1, "Foods", false),
-            Category(2,"Beverages", false),
-            Category(3,"Craft", false)
-        )
-
         Box {
             AsyncImage(
                 model = sme.value.image,
