@@ -34,28 +34,28 @@ data class SimilarSmeResponseList(
 data class UserPreferenceResponse(
 
     @field:SerializedName("password")
-    val password: String? = null,
+    var password: String,
 
     @field:SerializedName("generalCategory")
-    val generalCategory: Int? = null,
+    var generalCategory: Int,
 
     @field:SerializedName("phone")
-    val phone: String? = null,
+    var phone: String,
 
     @field:SerializedName("city")
-    val city: Int? = null,
+    var city: Int,
 
     @field:SerializedName("name")
-    val name: String? = null,
+    var name: String,
 
     @field:SerializedName("rating")
-    val rating: Int? = null,
+    var rating: Int,
 
     @field:SerializedName("priceRange")
-    val priceRange: Int? = null,
+    var priceRange: Int,
 
     @field:SerializedName("email")
-    val email: String? = null
+    var email: String
 )
 
 data class DetailSMEResponse(

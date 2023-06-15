@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.api.LoginResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.preference.PreferenceActivity
@@ -31,7 +32,7 @@ class MainViewModel(
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
-    private var _userLogin = MutableStateFlow<UserPreferenceResponse>(UserPreferenceResponse())
+    private var _userLogin = MutableStateFlow<UserPreferenceResponse>(UserPreferenceResponse("", -1, "", -1, "", -1, -1, ""))
     val userLogin: StateFlow<UserPreferenceResponse> get() = _userLogin
 
     fun login(email: String, password: String, context: Context){
@@ -63,8 +64,12 @@ class MainViewModel(
                 if (response.isSuccessful){
                     val user: UserPreferenceResponse = response.body()!!
 
+                    //set User Preference
+                    val preference = UserPreference(context)
+                    preference.setUser(user)
+
                     val activity = context as Activity
-                    if (user.city == 0){
+                    if (user.city == -1){
                         activity.startActivity(Intent(context, PreferenceActivity::class.java))
                     }else{
                         activity.startActivity(Intent(context, UserActivity::class.java))

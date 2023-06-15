@@ -1,6 +1,7 @@
 package com.bangkit.smeus.ui.preference
 
 import android.app.Activity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import android.content.Intent
 import android.media.Rating
 import android.os.Bundle
@@ -34,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
@@ -48,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.City
 import com.bangkit.smeus.ui.model.PriceRange
@@ -73,33 +76,53 @@ class PreferenceActivity : ComponentActivity() {
 
 @Composable
 fun PreferenceScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PreferenceViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val preference = UserPreference(context)
+
+    var location = viewModel.location.collectAsState()
+    var category = viewModel.category.collectAsState()
+    var priceRange = viewModel.priceRange.collectAsState()
+    var rating = viewModel.rating.collectAsState()
+
     var state by rememberSaveable { mutableStateOf(0)}
 
     Column() {
         when (state) {
             0 -> {
-                LocationScreen(){
-                    state += it
-                }
+                LocationScreen(
+                    city = location.value,
+                    onClick = { state += it },
+                    onChange = { viewModel.changeLocation(it) }
+                )
             }
             1 -> {
-                CategoryScreen() {
-                    state += it
-                }
+                CategoryScreen(
+                    category = category.value,
+                    onClick = { state += it },
+                    onChange = { viewModel.changeCategory(it) }
+                )
             }
             2 -> {
-                PriceRangeScreen() {
-                    state += it
-                }
+                PriceRangeScreen(
+                    priceRange = priceRange.value,
+                    onClick = { state += it },
+                    onChange = { viewModel.changePriceRange(it) }
+                )
             }
             3 -> {
-                RatingScreen() {
-                    val activity = context as Activity
-                    activity.startActivity(Intent(context, UserActivity::class.java))
-                }
+                RatingScreen(
+                    rating = rating.value,
+                    onClick = { state += it },
+                    onChange = { viewModel.changeRating(it) },
+                    onFinish = {
+                        preference.updateUserPreference(category.value, location.value, rating.value, priceRange.value)
+                        val activity = context as Activity
+                        activity.startActivity(Intent(context, UserActivity::class.java))
+                    }
+                )
             }
         }
     }
@@ -109,11 +132,12 @@ fun PreferenceScreen(
 @Composable
 fun LocationScreen(
     modifier: Modifier = Modifier,
-    onClick: (it: Int) -> Unit
+    city: City,
+    onClick: (it: Int) -> Unit,
+    onChange: (city: City) -> Unit,
 ){
     val cityList = City.listCity
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(cityList[0].text) }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -142,7 +166,7 @@ fun LocationScreen(
                     }
                 ) {
                     TextField(
-                        value = selectedText,
+                        value = city.text,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -156,7 +180,7 @@ fun LocationScreen(
                             DropdownMenuItem(
                                 text = { Text(text = item.text) },
                                 onClick = {
-                                    selectedText = item.text
+                                    onChange(item)
                                     expanded = false
                                 }
                             )
@@ -186,11 +210,12 @@ fun LocationScreen(
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
-    onClick: (it: Int) -> Unit
+    category: Category,
+    onClick: (it: Int) -> Unit,
+    onChange: (it: Category) -> Unit,
 ){
     val categoryList = Category.listCategory
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(categoryList[0].text) }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -219,7 +244,7 @@ fun CategoryScreen(
                     }
                 ) {
                     TextField(
-                        value = selectedText,
+                        value = category.text,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -233,7 +258,7 @@ fun CategoryScreen(
                             DropdownMenuItem(
                                 text = { Text(text = item.text) },
                                 onClick = {
-                                    selectedText = item.text
+                                    onChange(item)
                                     expanded = false
                                 }
                             )
@@ -283,11 +308,12 @@ fun CategoryScreen(
 @Composable
 fun PriceRangeScreen(
     modifier: Modifier = Modifier,
-    onClick: (it: Int) -> Unit
+    priceRange: PriceRange,
+    onClick: (it: Int) -> Unit,
+    onChange: (it: PriceRange) -> Unit,
 ){
     val priceRangeList = PriceRange.listPriceRange
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(priceRangeList[0].text) }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -316,7 +342,7 @@ fun PriceRangeScreen(
                     }
                 ) {
                     TextField(
-                        value = selectedText,
+                        value = priceRange.text,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -330,7 +356,7 @@ fun PriceRangeScreen(
                             DropdownMenuItem(
                                 text = { Text(text = item.text) },
                                 onClick = {
-                                    selectedText = item.text
+                                    onChange(item)
                                     expanded = false
                                 }
                             )
@@ -380,11 +406,13 @@ fun PriceRangeScreen(
 @Composable
 fun RatingScreen(
     modifier: Modifier = Modifier,
-    onClick: (it: Int) -> Unit
+    rating: Int,
+    onClick: (it: Int) -> Unit,
+    onChange: (it: Int) -> Unit,
+    onFinish: () -> Unit
 ){
     val ratingList = listOf<String>("1","2","3","4","5")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(ratingList[0]) }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -413,7 +441,7 @@ fun RatingScreen(
                     }
                 ) {
                     TextField(
-                        value = selectedText,
+                        value = rating.toString(),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -427,7 +455,7 @@ fun RatingScreen(
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    selectedText = item
+                                    onChange(Integer.parseInt(item))
                                     expanded = false
                                 }
                             )
@@ -436,20 +464,40 @@ fun RatingScreen(
                 }
             }
         }
-        Button(
-            onClick = { onClick(1) },
-            content = {
-                Text(
-                    text = "Finish",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-        )
+        Row(
+            modifier =  modifier.align(Alignment.BottomCenter)
+        ) {
+            Button(
+                onClick = { onClick(-1) },
+                content = {
+                    Text(
+                        text = "Back",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                ),
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 24.dp, end = 12.dp)
+            )
+            Button(
+                onClick = { onFinish() },
+                content = {
+                    Text(
+                        text = "Finish",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                modifier = modifier
+                    .weight(1F)
+                    .padding(bottom = 24.dp, start = 12.dp, end = 24.dp)
+            )
+        }
     }
 }
 

@@ -19,6 +19,16 @@ interface ApiService {
 //        @Body loginRequest: LoginRequest
 //    ): Call<LoginResponse>
 
+    @FormUrlEncoded
+    @PUT("user/{user_email}")
+    fun updateUserPreference(
+        @Path(value = "user_email", encoded = true) user_email: String,
+        @Field("city") city: Int,
+        @Field("generalCategory") generalCategory: Int,
+        @Field("priceRange") priceRange: Int,
+        @Field("rating") rating: Int
+    ): Call<RegisterResponse>
+
     @GET("user/{user_email}")
     fun fetchUserPreference(
         @Path(value = "user_email", encoded = true) user_email: String
