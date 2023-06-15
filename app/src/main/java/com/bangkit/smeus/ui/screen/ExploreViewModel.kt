@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.bangkit.smeus.ui.api.DetailSMEResponse
+import com.bangkit.smeus.ui.api.response.ResultFinItem
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,8 @@ class ExploreViewModel : ViewModel() {
 
     private val _smeList = MutableStateFlow<SnapshotStateList<DetailSMEResponse>>(mutableStateListOf())
     val smeList: StateFlow<SnapshotStateList<DetailSMEResponse>> get() = _smeList
+
+    private var rawList: List<ResultFinItem> = listOf()
 
     fun fetchSME() {
         val client = ApiConfig.getApiService().fetchSMEs()

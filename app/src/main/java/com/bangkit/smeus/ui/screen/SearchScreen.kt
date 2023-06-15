@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
@@ -26,52 +26,47 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.R
+import com.bangkit.smeus.ui.UserPreference
+import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.Destination
 import com.bangkit.smeus.ui.model.PriceRange
 import com.bangkit.smeus.ui.theme.SMEUsTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    modifier: Modifier = Modifier
+    key:String = "",
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = viewModel(),
+    navigateToDetail: (smeId: String) -> Unit
 ){
-    var listDestinationFake = listOf<Destination>(
-        Destination(1, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(2, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(3, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(4, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(5, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(6, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(7, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-        Destination(8, "Destination1", category = "Category1", location = "Location1", price = "Price1", photo = R.drawable.ic_launcher_background),
-    )
-    var listCategoryFake = listOf<Category>(
-        Category(1, "Foods", false),
-        Category(2,"Beverages", false),
-        Category(3,"Craft", false),
-        Category(4,"Goods", false),
-        Category(5,"OMG", false),
-        Category(6,"Bebas", false)
-    )
-    var listPriceFake = listOf<Category>(
-        Category(2,"< 25K", false),
-        Category(3,"25-50K", false),
-        Category(4,"> 50K", false),
-    )
+    val context = LocalContext.current
+    val preference = UserPreference(context)
+    val user = preference.getUser()
+
+    var searchText by rememberSaveable { mutableStateOf(key) }
+
+    val sme = viewModel.smeList.collectAsState()
+    viewModel.fetchSME(user.email)
 
     val categoryList = Category.listCategory
     val priceRangeList = PriceRange.listPriceRange
@@ -95,10 +90,13 @@ fun SearchScreen(
         )
         Spacer(modifier = modifier.height(16.dp))
         InputForm(
-            text = "",
+            text = searchText,
             label = "Search",
             errorText = "",
-            onValueChange = {},
+            onValueChange = {
+                searchText = it
+                viewModel.filterSME(it)
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -198,7 +196,7 @@ fun SearchScreen(
             }
         }
         Text(
-            text = "Showing 8 Results",
+            text = "Showing ${sme.value.size} Results",
             color = Color.Gray,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
@@ -206,23 +204,25 @@ fun SearchScreen(
             modifier = modifier
                 .fillMaxWidth()
         )
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(200.dp),
-            contentPadding = PaddingValues(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(8.dp),
             modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ){
-//            items(items = listDestinationFake, key = {it -> it.id}){
-//                DestinationItem(
-//                    image = it.photo,
-//                    name = it.name,
-//                    location = it.location,
-//                    category = it.category,
-//                    price = it.price,
-//                    onClick = { }
-//                )
-//            }
+            items(items = sme.value, key = {it -> it.indexPlace}){sme ->
+                DestinationItem(
+                    id = sme.indexPlace,
+                    image = sme.image,
+                    name = sme.nameSmes,
+                    goods = sme.goods,
+                    onClick = {
+                        navigateToDetail(sme.indexPlace)
+                    }
+                )
+            }
         }
     }
 }
@@ -235,7 +235,7 @@ fun SearchScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ){
-            SearchScreen()
+            SearchScreen(navigateToDetail = {})
         }
     }
 }

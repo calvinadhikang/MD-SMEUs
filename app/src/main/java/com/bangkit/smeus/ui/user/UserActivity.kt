@@ -84,11 +84,23 @@ fun User(
                     ExploreScreen(
                         navigateToDetail = {smeId ->
                             navController.navigate(Screen.Detail.createRoute(smeId))
+                        },
+                        navigateToSearch = { key ->
+                            navController.navigate(Screen.Search.createRoute(key))
                         }
                     )
                 }
-                composable(Screen.Search.route){
-                    SearchScreen()
+                composable(
+                    route = Screen.Search.route,
+                    arguments = listOf(navArgument("key") {type = NavType.StringType})
+                ){
+                    val key = it.arguments?.getString("key") ?: ""
+                    SearchScreen(
+                        key = key,
+                        navigateToDetail = {smeId ->
+                            navController.navigate(Screen.Detail.createRoute(smeId))
+                        }
+                    )
                 }
                 composable(Screen.Favorite.route){
                     FavoriteScreen(

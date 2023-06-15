@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -88,8 +89,10 @@ fun FavoriteScreen(
         )
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(8.dp),
             modifier = modifier
+                .fillMaxWidth()
                 .padding(top = 8.dp, start = 0.dp, bottom = 8.dp)
         ){
             items(items = sme.value, key = {it -> it.indexPlace}){sme ->
@@ -100,8 +103,7 @@ fun FavoriteScreen(
                     goods = sme.goods,
                     onClick = {
                         navigateToDetail(sme.indexPlace)
-                    },
-                    modifier = modifier.padding(end = 16.dp)
+                    }
                 )
             }
         }

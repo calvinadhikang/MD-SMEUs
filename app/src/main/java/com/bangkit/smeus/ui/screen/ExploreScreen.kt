@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,7 +42,8 @@ import com.bangkit.smeus.ui.theme.SMEUsTheme
 fun ExploreScreen(
     modifier: Modifier = Modifier,
     viewModel: ExploreViewModel = ExploreViewModel(),
-    navigateToDetail: (String) -> Unit
+    navigateToDetail: (String) -> Unit,
+    navigateToSearch: (String) -> Unit,
 ) {
     var listCategoryFake = listOf<Category>(
         Category(1, "Foods", false),
@@ -81,14 +83,17 @@ fun ExploreScreen(
         }
         Spacer(modifier = modifier.height(16.dp))
         InputForm(
-            text = "",
+            text = searchText,
             label = "Search",
             errorText = "",
-            onValueChange = {},
+            onValueChange = { searchText = it},
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = ""
+                    contentDescription = "",
+                    modifier = modifier.clickable {
+                        navigateToSearch(searchText)
+                    }
                 )
             }
         )
@@ -151,6 +156,6 @@ fun ExploreScreen(
 @Composable
 fun HomeScreenPreview() {
     SMEUsTheme {
-        ExploreScreen(navigateToDetail = {})
+        ExploreScreen(navigateToDetail = {}, navigateToSearch = {})
     }
 }
