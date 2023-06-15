@@ -81,6 +81,7 @@ fun Main(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    viewModel.checkUserSaved(context)
 
     val isLoading by viewModel.loading.observeAsState(false)
 

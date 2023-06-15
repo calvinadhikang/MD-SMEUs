@@ -27,11 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bangkit.smeus.R
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.components.CategoryItem
 import com.bangkit.smeus.ui.components.DestinationItem
 import com.bangkit.smeus.ui.components.InputForm
@@ -55,6 +57,8 @@ fun ExploreScreen(
     val smeList = viewModel.smeList.collectAsState(emptyList())
     viewModel.fetchSME()
 
+    val user = UserPreference(context = LocalContext.current).getUser()
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -68,7 +72,7 @@ fun ExploreScreen(
             ) {
                 Text(
                     color = Color.DarkGray,
-                    text = "Hello, Dikang",
+                    text = "Hello, ${user.name}",
                     modifier = modifier
                 )
                 Text(

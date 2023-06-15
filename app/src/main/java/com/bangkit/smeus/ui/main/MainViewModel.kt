@@ -15,6 +15,7 @@ import com.bangkit.smeus.ui.api.LoginResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.preference.PreferenceActivity
 import com.bangkit.smeus.ui.repository.SmeRepository
+import com.bangkit.smeus.ui.user.User
 import com.bangkit.smeus.ui.user.UserActivity
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.Dispatchers
@@ -31,9 +32,6 @@ class MainViewModel(
 
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
-
-    private var _userLogin = MutableStateFlow<UserPreferenceResponse>(UserPreferenceResponse("", -1, "", -1, "", -1, -1, ""))
-    val userLogin: StateFlow<UserPreferenceResponse> get() = _userLogin
 
     fun login(email: String, password: String, context: Context){
         _loading.value = true
@@ -81,6 +79,20 @@ class MainViewModel(
             override fun onFailure(call: Call<UserPreferenceResponse>, t: Throwable) {
             }
         })
+    }
+
+    fun checkUserSaved(context: Context){
+        val activity = context as Activity
+        val preference = UserPreference(context)
+        val user = preference.getUser()
+        if (user.email != ""){
+            Toast.makeText(context, "Welcome back, ${user.name}", Toast.LENGTH_SHORT).show()
+            if (user.city == -1){
+                activity.startActivity(Intent(context, PreferenceActivity::class.java))
+            }else{
+                activity.startActivity(Intent(context, UserActivity::class.java))
+            }
+        }
     }
 }
 
