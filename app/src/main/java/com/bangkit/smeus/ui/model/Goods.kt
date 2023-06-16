@@ -17,6 +17,17 @@ class Goods(
             Goods(8, "Street Snacks"),
         )
 
+        fun getById(id: Int): Goods{
+            var target: Goods = listGoods[0]
+            listGoods.forEachIndexed { index, goods ->
+                if (target.id == id){
+                    target = goods
+                }
+            }
+
+            return target
+        }
+
         fun randomGoods(): Goods {
             val rnd = (0..8).random()
             return listGoods[rnd]

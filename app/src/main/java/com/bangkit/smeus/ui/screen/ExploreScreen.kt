@@ -55,6 +55,7 @@ fun ExploreScreen(
 
     val preference = UserPreference(context)
     val user = preference.getUser()
+    preference.predictGoods(context)
 
     Column(
         modifier = modifier

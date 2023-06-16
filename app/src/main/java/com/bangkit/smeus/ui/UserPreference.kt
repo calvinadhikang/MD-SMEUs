@@ -92,16 +92,36 @@ internal class UserPreference(context: Context) {
 
         val model = SmeusClassificationmodel.newInstance(context)
 
+        val numIntegers = 4
+        val intSize = 4
+        var byteBuffer = ByteBuffer.allocate(numIntegers * intSize)
+        byteBuffer.putInt(1)
+        byteBuffer.putInt(0)
+        byteBuffer.putInt(1)
+        byteBuffer.putInt(3)
+
         // Creates inputs for reference.
-//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 4), DataType.FLOAT32)
-//        inputFeature0.loadBuffer(byteBuffer)
-//
-//        // Runs model inference and gets result.
-//        val outputs = model.process(inputFeature0)
-//        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
-//
-//        // Releases model resources if no longer used.
-//        model.close()
+        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 4), DataType.FLOAT32)
+        inputFeature0.loadBuffer(byteBuffer)
+
+        // Runs model inference and gets result.
+        val outputs = model.process(inputFeature0)
+        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+        var confidence = outputFeature0.floatArray
+        var maxPos = 0
+        var maxConfidence = 0F
+        confidence.forEachIndexed { index, fl ->
+            if (fl > maxConfidence){
+                maxConfidence = fl
+                maxPos = index
+            }
+            Log.d("MODEL_RESULT_EACH", fl.toString())
+        }
+        Log.d("MODEL_RESULT", maxPos.toString())
+
+        // Releases model resources if no longer used.
+        model.close()
 
         return Goods.randomGoods()
     }
