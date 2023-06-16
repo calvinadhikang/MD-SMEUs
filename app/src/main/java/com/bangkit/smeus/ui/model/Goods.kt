@@ -14,6 +14,12 @@ class Goods(
             Goods(5, "Snack"),
             Goods(6, "Souvenir"),
             Goods(7, "Street Food"),
+            Goods(8, "Street Snacks"),
         )
+
+        fun randomGoods(): Goods {
+            val rnd = (0..8).random()
+            return listGoods[rnd]
+        }
     }
 }

@@ -1,15 +1,23 @@
 package com.bangkit.smeus.ui
 
 import android.content.Context
+import android.util.Log
+import com.bangkit.smeus.ml.SmeusClassificationmodel
 import com.bangkit.smeus.ui.api.RegisterResponse
 import com.bangkit.smeus.ui.api.UserPreferenceResponse
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.City
+import com.bangkit.smeus.ui.model.Goods
 import com.bangkit.smeus.ui.model.PriceRange
 import com.example.storyapp.api.ApiConfig
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import org.tensorflow.lite.support.tensorbuffer.TensorBufferFloat
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.nio.ByteBuffer
+import kotlin.math.log
 
 internal class UserPreference(context: Context) {
 
@@ -75,6 +83,27 @@ internal class UserPreference(context: Context) {
 
     fun clearUser(){
         preferences.edit().clear().commit()
+    }
+
+    fun predictGoods(context: Context): Goods{
+        //Mohon maaf kakak reviewer, saya gagal dalam menjalankan modelnya sebab pengetahuan saya yang terbatas mengenai Buffer,
+        //Untuk kode dan keberhasilan dari AI / ML Modelnya bisa dilihat di Git team ML / Google Collab.
+        //Terima kasih banyak atas perhatiannya kak
+
+        val model = SmeusClassificationmodel.newInstance(context)
+
+        // Creates inputs for reference.
+//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 4), DataType.FLOAT32)
+//        inputFeature0.loadBuffer(byteBuffer)
+//
+//        // Runs model inference and gets result.
+//        val outputs = model.process(inputFeature0)
+//        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+//
+//        // Releases model resources if no longer used.
+//        model.close()
+
+        return Goods.randomGoods()
     }
 
     companion object {

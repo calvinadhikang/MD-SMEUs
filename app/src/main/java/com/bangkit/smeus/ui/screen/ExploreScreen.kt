@@ -1,5 +1,6 @@
 package com.bangkit.smeus.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,7 +52,9 @@ fun ExploreScreen(
     val smeList = viewModel.smeList.collectAsState(emptyList())
     viewModel.fetchSME()
 
-    val user = UserPreference(context = LocalContext.current).getUser()
+    val context = LocalContext.current
+    val preference = UserPreference(context)
+    val user = preference.getUser()
 
     Column(
         modifier = modifier

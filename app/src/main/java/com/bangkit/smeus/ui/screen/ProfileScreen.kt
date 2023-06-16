@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,18 +13,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,7 +47,9 @@ import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.IconText
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.main.MainActivity
+import com.bangkit.smeus.ui.model.City
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier
@@ -52,15 +62,6 @@ fun ProfileScreen(
         val context = LocalContext.current
         val preference = UserPreference(context)
         val user = preference.getUser()
-
-        var password by rememberSaveable { mutableStateOf("") }
-        var confirmPassword by rememberSaveable { mutableStateOf("") }
-
-        var nameErrorText by rememberSaveable { mutableStateOf("") }
-        var emailErrorText by rememberSaveable { mutableStateOf("") }
-        var phoneErrorText by rememberSaveable { mutableStateOf("") }
-        var passwordErrorText by rememberSaveable { mutableStateOf("") }
-        var confirmPasswordErrorText by rememberSaveable { mutableStateOf("") }
 
         Text(
             text = "Profile",
@@ -91,68 +92,11 @@ fun ProfileScreen(
 
         Spacer(modifier = modifier.padding(16.dp))
 
-        Text(text = "Your Preferences :", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary, fontSize = 23.sp)
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.padding(bottom = 8.dp)
-        ) {
-            InputForm(
-                text = password,
-                label = "Password",
-                errorText = passwordErrorText,
-                onValueChange = {
-                    password = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Lock, contentDescription = "")
-                }
-            )
-            InputForm(
-                text = confirmPassword,
-                label = "Confirm Password",
-                errorText = confirmPasswordErrorText,
-                onValueChange = {
-                    confirmPassword = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Lock, contentDescription = "")
-                }
-            )
-        }
         ButtonForm(
             text = "Save Profile",
             color = MaterialTheme.colorScheme.primary,
             onClick = {
-                var valid = true
 
-                if (password == "") {
-                    passwordErrorText = "Password cannot be null"
-                } else {
-                    passwordErrorText = ""
-                }
-
-                if (confirmPassword == "") {
-                    confirmPasswordErrorText = "Password cannot be null"
-                } else {
-                    confirmPasswordErrorText = ""
-                }
-
-                if (confirmPassword != password) {
-                    confirmPasswordErrorText =
-                        "Password must be the same with Confirmation Password"
-                }
-
-                if (password == "" || confirmPassword == "" || password != confirmPassword) {
-                    valid = false
-                }
-
-                if (valid) {
-                    Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                    val activity = (context as Activity)
-                    activity.finish()
-                } else {
-                    Toast.makeText(context, "Registered Unsuccessful", Toast.LENGTH_SHORT).show()
-                }
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -171,18 +115,5 @@ fun ProfileScreen(
                 .fillMaxWidth()
                 .height(50.dp)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    MaterialTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ){
-            ProfileScreen()
-        }
     }
 }

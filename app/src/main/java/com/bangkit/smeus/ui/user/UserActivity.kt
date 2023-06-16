@@ -16,10 +16,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,12 +44,20 @@ import com.bangkit.smeus.ui.screen.FavoriteScreen
 import com.bangkit.smeus.ui.screen.ProfileScreen
 import com.bangkit.smeus.ui.screen.SearchScreen
 import com.bangkit.smeus.ui.theme.SMEUsTheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SMEUsTheme {
+                val systemUiController = rememberSystemUiController()
+                SideEffect {
+                    systemUiController.setStatusBarColor(
+                        color = Color(0xFFFE7315),
+                        darkIcons = false
+                    )
+                }
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -137,14 +148,12 @@ fun BottomBar(
     navController: NavController,
     modifier: Modifier = Modifier
 ){
-    BottomNavigation(
-        modifier = modifier,
-        contentColor = Color.White,
-        backgroundColor = Color.Red
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
+    NavigationBar(
+        modifier = modifier
+    ) {
         val navigationItems = listOf(
             NavigationItem(
                 title = "Explore",
@@ -162,32 +171,78 @@ fun BottomBar(
                 screen = Screen.Profile
             )
         )
-        BottomNavigation {
-            navigationItems.map { item ->
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title
-                        )
-                    },
-                    label = { Text(text = item.title) },
-                    selected = currentRoute == item.screen.route,
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Gray,
-                    onClick = {
-                        navController.navigate(item.screen.route){
-                            popUpTo(navController.graph.findStartDestination().id){
-                                saveState = true
-                            }
-                            restoreState = true
-                            launchSingleTop = true
+        navigationItems.map { item ->
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.title
+                    )
+                },
+                selected = currentRoute == item.screen.route,
+                onClick = {
+                    navController.navigate(item.screen.route){
+                        popUpTo(navController.graph.findStartDestination().id){
+                            saveState = true
                         }
+                        restoreState = true
+                        launchSingleTop = true
                     }
-                )
-            }
+                }
+            )
         }
     }
+//    BottomNavigation(
+//        modifier = modifier,
+//        contentColor = Color.White,
+//        backgroundColor = Color.Red,
+//    ) {
+//        val navBackStackEntry by navController.currentBackStackEntryAsState()
+//        val currentRoute = navBackStackEntry?.destination?.route
+//
+//        val navigationItems = listOf(
+//            NavigationItem(
+//                title = "Explore",
+//                icon = Icons.Default.Search,
+//                screen = Screen.Explore
+//            ),
+//            NavigationItem(
+//                title = "Favorite",
+//                icon = Icons.Default.Favorite,
+//                screen = Screen.Favorite
+//            ),
+//            NavigationItem(
+//                title = "Profile",
+//                icon = Icons.Default.AccountCircle,
+//                screen = Screen.Profile
+//            )
+//        )
+//        BottomNavigation {
+//            navigationItems.map { item ->
+//                BottomNavigationItem(
+//                    icon = {
+//                        Icon(
+//                            imageVector = item.icon,
+//                            contentDescription = item.title
+//                        )
+//                    },
+//                    label = { Text(text = item.title) },
+//                    selected = currentRoute == item.screen.route,
+//                    selectedContentColor = Color.White,
+//                    unselectedContentColor = Color.Gray,
+//                    onClick = {
+//                        navController.navigate(item.screen.route){
+//                            popUpTo(navController.graph.findStartDestination().id){
+//                                saveState = true
+//                            }
+//                            restoreState = true
+//                            launchSingleTop = true
+//                        }
+//                    }
+//                )
+//            }
+//        }
+//    }
 }
 
 @Preview(showBackground = true)

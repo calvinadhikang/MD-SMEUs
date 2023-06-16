@@ -75,10 +75,10 @@ class MainViewModel: ViewModel() {
         val preference = UserPreference(context)
         val user = preference.getUser()
         if (user.email != ""){
-            Toast.makeText(context, "Welcome back, ${user.name}", Toast.LENGTH_SHORT).show()
             if (user.city == -1){
                 activity.startActivity(Intent(context, PreferenceActivity::class.java))
             }else{
+                Toast.makeText(context, "Welcome back, ${user.name}", Toast.LENGTH_SHORT).show()
                 activity.startActivity(Intent(context, UserActivity::class.java))
             }
         }

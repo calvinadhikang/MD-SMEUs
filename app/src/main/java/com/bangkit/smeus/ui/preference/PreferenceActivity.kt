@@ -5,20 +5,30 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,14 +42,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bangkit.smeus.R
 import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.City
@@ -107,6 +120,10 @@ fun PreferenceScreen(
                     rating = rating.value,
                     onClick = { state += it },
                     onChange = { viewModel.changeRating(it) },
+                )
+            }
+            4 -> {
+                PreferenceResultScreen(
                     onFinish = {
                         preference.updateUserPreference(category.value, location.value, rating.value, priceRange.value)
                         val activity = context as Activity
@@ -144,6 +161,17 @@ fun LocationScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             )
+//            Row(
+//                horizontalArrangement = Arrangement.Center,
+//                modifier = modifier.fillMaxWidth()
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.location),
+//                    contentDescription = "",
+//                    modifier = modifier
+//                        .fillMaxWidth(0.8F)
+//                )
+//            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -222,6 +250,17 @@ fun CategoryScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             )
+//            Row(
+//                horizontalArrangement = Arrangement.Center,
+//                modifier = modifier.fillMaxWidth()
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.category),
+//                    contentDescription = "",
+//                    modifier = modifier
+//                        .fillMaxWidth(0.8F)
+//                )
+//            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -320,6 +359,17 @@ fun PriceRangeScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             )
+//            Row(
+//                horizontalArrangement = Arrangement.Center,
+//                modifier = modifier.fillMaxWidth()
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.price),
+//                    contentDescription = "",
+//                    modifier = modifier
+//                        .fillMaxWidth(0.8F)
+//                )
+//            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -399,7 +449,6 @@ fun RatingScreen(
     rating: Int,
     onClick: (it: Int) -> Unit,
     onChange: (it: Int) -> Unit,
-    onFinish: () -> Unit
 ){
     val ratingList = listOf<String>("1","2","3","4","5")
     var expanded by remember { mutableStateOf(false) }
@@ -419,6 +468,17 @@ fun RatingScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             )
+//            Row(
+//                horizontalArrangement = Arrangement.Center,
+//                modifier = modifier.fillMaxWidth()
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.rating),
+//                    contentDescription = "",
+//                    modifier = modifier
+//                        .fillMaxWidth(0.8F)
+//                )
+//            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -475,10 +535,10 @@ fun RatingScreen(
                     .padding(bottom = 24.dp, start = 24.dp, end = 12.dp)
             )
             Button(
-                onClick = { onFinish() },
+                onClick = { onClick(1) },
                 content = {
                     Text(
-                        text = "Finish",
+                        text = "Next",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -490,11 +550,57 @@ fun RatingScreen(
         }
     }
 }
+@Composable
+fun PreferenceResultScreen(
+    modifier: Modifier = Modifier,
+    onFinish: () -> Unit
+){
+    val context = LocalContext.current
+    val preference = UserPreference(context)
+    val good = preference.predictGoods(context)
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.primary)
+            .fillMaxSize()
+    ) {
+        Icon(
+            imageVector = Icons.Default.CheckCircle,
+            contentDescription = "",
+            tint = Color.White,
+            modifier = modifier
+                .fillMaxWidth(0.8F)
+                .fillMaxHeight(0.5F)
+        )
+        Text(text = "Your Preference", color = Color.White, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = modifier.padding(top = 8.dp, bottom = 8.dp))
+        Text(text = good.text, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+        Spacer(modifier = modifier.padding(top = 8.dp, bottom = 8.dp))
+        Button(
+            onClick = { onFinish() },
+            content = {
+                Text(
+                    text = "Finish",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            },
+            modifier = modifier
+                .height(80.dp)
+                .width(200.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black
+            )
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     SMEUsTheme {
-        PreferenceScreen()
+        LocationScreen(city = City.listCity[0], onClick = {}, onChange = {})
     }
 }

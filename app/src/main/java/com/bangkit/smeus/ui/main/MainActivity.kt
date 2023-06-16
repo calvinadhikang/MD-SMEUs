@@ -81,13 +81,17 @@ fun Main(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "",
-            modifier = modifier
-                .fillMaxWidth()
-                .height(300.dp)
-        )
+//        Row(
+//            horizontalArrangement = Arrangement.Center,
+//            modifier = modifier.fillMaxWidth()
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.teammin),
+//                contentDescription = "",
+//                modifier = modifier
+//                    .fillMaxWidth(0.8F)
+//            )
+//        }
         Spacer(modifier = modifier.height(50.dp))
         Text(
             text = "Sign in to start your",
