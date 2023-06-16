@@ -23,5 +23,16 @@ class City(
 
             return target.text
         }
+
+        fun getIdObject(id:Int): City {
+            var target:City = listCity[0]
+            listCity.forEachIndexed { index, city ->
+                if (city.id == id){
+                    target = city
+                }
+            }
+
+            return target
+        }
     }
 }

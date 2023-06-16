@@ -50,17 +50,17 @@ internal class UserPreference(context: Context) {
         return UserPreferenceResponse(password!!, generalCategory, phone!!, city, name!!, rating, priceRange, email!!)
     }
 
-    fun updateUserPreference(generalCategory: Category, city: City, rating: Int, priceRange: PriceRange){
+    fun updateUserPreference(generalCategory: Int, city: Int, rating: Int, priceRange: PriceRange){
         val userOld = this.getUser()
-        userOld.city = city.id
-        userOld.generalCategory = generalCategory.id
+        userOld.city = city
+        userOld.generalCategory = generalCategory
         userOld.rating = rating
         userOld.priceRange = priceRange.id
 
         val client = ApiConfig.getApiService().updateUserPreference(
             user_email = userOld.email,
-            generalCategory = generalCategory.id,
-            city = city.id,
+            generalCategory = generalCategory,
+            city = city,
             priceRange = priceRange.id,
             rating = rating
         )

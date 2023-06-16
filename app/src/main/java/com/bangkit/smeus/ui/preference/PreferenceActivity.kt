@@ -129,7 +129,7 @@ fun PreferenceScreen(
                     price = priceRange.value.id,
                     rating = rating.value,
                     onFinish = {
-                        preference.updateUserPreference(category.value, location.value, rating.value, priceRange.value)
+                        preference.updateUserPreference(category.value.id, location.value.id, rating.value, priceRange.value)
                         val activity = context as Activity
                         activity.startActivity(Intent(context, UserActivity::class.java))
                     }

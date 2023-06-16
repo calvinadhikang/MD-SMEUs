@@ -21,5 +21,16 @@ class PriceRange(
 
             return target.text
         }
+
+        fun getIdObject(id: Int): PriceRange {
+            var target: PriceRange = listPriceRange[0]
+            listPriceRange.forEachIndexed { index, priceRange ->
+                if (priceRange.id == id){
+                    target = priceRange
+                }
+            }
+
+            return target
+        }
     }
 }

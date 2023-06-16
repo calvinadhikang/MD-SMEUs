@@ -47,7 +47,12 @@ import com.bangkit.smeus.ui.components.ButtonForm
 import com.bangkit.smeus.ui.components.IconText
 import com.bangkit.smeus.ui.components.InputForm
 import com.bangkit.smeus.ui.main.MainActivity
+import com.bangkit.smeus.ui.model.Category
 import com.bangkit.smeus.ui.model.City
+import com.bangkit.smeus.ui.model.PriceRange
+import com.bangkit.smeus.ui.preference.LocationScreen
+import com.bangkit.smeus.ui.preference.PreferenceActivity
+import com.bangkit.smeus.ui.theme.SMEUsTheme
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -91,12 +96,12 @@ fun ProfileScreen(
         IconText(text = user.phone, icon = Icons.Default.Phone, textColor = Color.Black, iconTint = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
 
         Spacer(modifier = modifier.padding(16.dp))
-
         ButtonForm(
-            text = "Save Profile",
+            text = "Change Preference",
             color = MaterialTheme.colorScheme.primary,
             onClick = {
-
+                val activity = context as Activity
+                activity.startActivity(Intent(context, PreferenceActivity::class.java))
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -115,5 +120,13 @@ fun ProfileScreen(
                 .fillMaxWidth()
                 .height(50.dp)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfilePreview() {
+    SMEUsTheme {
+        ProfileScreen()
     }
 }
