@@ -174,7 +174,7 @@ fun DetailScreen(
                         name = sme.nameSmes,
                         goods = sme.goods,
                         onClick = {
-                            navigateToDetail(sme.indexPlace)
+//                            navigateToDetail(sme.indexPlace)
                         }
                     )
                 }
