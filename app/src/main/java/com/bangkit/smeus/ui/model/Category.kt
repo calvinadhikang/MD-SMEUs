@@ -14,5 +14,16 @@ class Category(
             Category(2, "Fashion", R.drawable.fashion),
             Category(3, "Munchies", R.drawable.craft),
         )
+
+        fun getId(id: Int): String{
+            var target: Category = listCategory[0]
+            listCategory.forEachIndexed { index, category ->
+                if (category.id  == id){
+                    target = category
+                }
+            }
+
+            return target.text
+        }
     }
 }

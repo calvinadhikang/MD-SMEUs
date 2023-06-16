@@ -7,8 +7,19 @@ class PriceRange(
     companion object{
         val listPriceRange: List<PriceRange> = listOf(
             PriceRange(0, "25.000-50.000"),
-            PriceRange(0, "<25.000"),
-            PriceRange(0, ">50.000"),
+            PriceRange(1, "<25.000"),
+            PriceRange(2, ">50.000"),
         )
+
+        fun getId(id: Int): String {
+            var target: PriceRange = listPriceRange[0]
+            listPriceRange.forEachIndexed { index, priceRange ->
+                if (priceRange.id == id){
+                    target = priceRange
+                }
+            }
+
+            return target.text
+        }
     }
 }

@@ -47,12 +47,12 @@ fun ExploreScreen(
     navigateToDetail: (String) -> Unit,
     navigateToSearch: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     var searchText by rememberSaveable { mutableStateOf("") }
 
     val smeList = viewModel.smeList.collectAsState(emptyList())
-    viewModel.fetchSME()
+    viewModel.fetchSME(context)
 
-    val context = LocalContext.current
     val preference = UserPreference(context)
     val user = preference.getUser()
 

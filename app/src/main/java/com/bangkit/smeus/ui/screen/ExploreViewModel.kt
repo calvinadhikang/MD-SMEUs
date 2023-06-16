@@ -1,11 +1,16 @@
 package com.bangkit.smeus.ui.screen
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.bangkit.smeus.ui.UserPreference
 import com.bangkit.smeus.ui.api.DetailSMEResponse
 import com.bangkit.smeus.ui.api.response.ResultFinItem
+import com.bangkit.smeus.ui.model.Category
+import com.bangkit.smeus.ui.model.City
+import com.bangkit.smeus.ui.model.PriceRange
 import com.example.storyapp.api.ApiConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,8 +25,15 @@ class ExploreViewModel : ViewModel() {
 
     private var rawList: List<DetailSMEResponse> = listOf()
 
-    fun fetchSME() {
-        val client = ApiConfig.getApiService().fetchSMEs()
+    fun fetchSME(context: Context) {
+        val user = UserPreference(context).getUser()
+        var city: String = City.getId(user.city)
+        var category: String = Category.getId(user.generalCategory)
+
+        val client = ApiConfig.getApiService().fetchSMEs(
+            city = city,
+            category = category,
+        )
         client.enqueue(object : Callback<List<DetailSMEResponse>> {
             override fun onResponse(
                 call: Call<List<DetailSMEResponse>>,

@@ -7,10 +7,21 @@ class City(
     companion object{
         val listCity: List<City> = listOf(
             City(0, "Bali"),
-            City(0, "Bandung"),
-            City(0, "Jakarta"),
-            City(0, "Surakarta"),
-            City(0, "Jogjakarta"),
+            City(1, "Bandung"),
+            City(2, "Jakarta"),
+            City(3, "Surakarta"),
+            City(4, "Jogjakarta"),
         )
+
+        fun getId(id:Int): String {
+            var target:City = listCity[0]
+            listCity.forEachIndexed { index, city ->
+                if (city.id == id){
+                    target = city
+                }
+            }
+
+            return target.text
+        }
     }
 }
