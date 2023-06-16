@@ -47,7 +47,7 @@ interface ApiService {
     @GET("sme")
     fun fetchSMEs(
         @Query(value = "city") city: String = "",
-        @Query(value = "general_category") category: String = "",
+        @Query(value = "general_category", encoded = false) category: String = "",
         @Query(value = "price_range") price_range: String = "",
     ): Call<List<DetailSMEResponse>>
 
