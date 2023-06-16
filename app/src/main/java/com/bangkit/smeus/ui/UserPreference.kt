@@ -18,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.nio.ByteBuffer
 import kotlin.math.log
+import kotlin.math.max
 
 internal class UserPreference(context: Context) {
 
@@ -85,20 +86,22 @@ internal class UserPreference(context: Context) {
         preferences.edit().clear().commit()
     }
 
-    fun predictGoods(context: Context): Goods{
-        //Mohon maaf kakak reviewer, saya gagal dalam menjalankan modelnya sebab pengetahuan saya yang terbatas mengenai Buffer,
-        //Untuk kode dan keberhasilan dari AI / ML Modelnya bisa dilihat di Git team ML / Google Collab.
-        //Terima kasih banyak atas perhatiannya kak
-
+    fun predictGoods(
+        city: Int,
+        category: Int,
+        price: Int,
+        rating: Int,
+        context: Context
+    ): Goods{
         val model = SmeusClassificationmodel.newInstance(context)
 
         val numIntegers = 4
         val intSize = 4
         var byteBuffer = ByteBuffer.allocate(numIntegers * intSize)
-        byteBuffer.putInt(1)
-        byteBuffer.putInt(0)
-        byteBuffer.putInt(1)
-        byteBuffer.putInt(3)
+        byteBuffer.putInt(city)
+        byteBuffer.putInt(category)
+        byteBuffer.putInt(price)
+        byteBuffer.putInt(rating)
 
         // Creates inputs for reference.
         val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 4), DataType.FLOAT32)
@@ -123,7 +126,7 @@ internal class UserPreference(context: Context) {
         // Releases model resources if no longer used.
         model.close()
 
-        return Goods.randomGoods()
+        return Goods.getById(maxPos)
     }
 
     companion object {

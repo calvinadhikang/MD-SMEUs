@@ -1,5 +1,7 @@
 package com.bangkit.smeus.ui.model
 
+import android.util.Log
+
 class Goods(
     var id: Int,
     var text: String
@@ -20,17 +22,12 @@ class Goods(
         fun getById(id: Int): Goods{
             var target: Goods = listGoods[0]
             listGoods.forEachIndexed { index, goods ->
-                if (target.id == id){
+                if (goods.id == id){
                     target = goods
                 }
             }
 
             return target
-        }
-
-        fun randomGoods(): Goods {
-            val rnd = (0..8).random()
-            return listGoods[rnd]
         }
     }
 }

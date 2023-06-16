@@ -124,6 +124,10 @@ fun PreferenceScreen(
             }
             4 -> {
                 PreferenceResultScreen(
+                    city = location.value.id,
+                    category = category.value.id,
+                    price = priceRange.value.id,
+                    rating = rating.value,
                     onFinish = {
                         preference.updateUserPreference(category.value, location.value, rating.value, priceRange.value)
                         val activity = context as Activity
@@ -550,14 +554,25 @@ fun RatingScreen(
         }
     }
 }
+
 @Composable
 fun PreferenceResultScreen(
+    city: Int,
+    category: Int,
+    price: Int,
+    rating: Int,
     modifier: Modifier = Modifier,
     onFinish: () -> Unit
 ){
     val context = LocalContext.current
     val preference = UserPreference(context)
-    val good = preference.predictGoods(context)
+    val good by rememberSaveable { mutableStateOf(preference.predictGoods(
+        city,
+        category,
+        price,
+        rating,
+        context
+    ).text) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -573,9 +588,9 @@ fun PreferenceResultScreen(
                 .fillMaxWidth(0.8F)
                 .fillMaxHeight(0.5F)
         )
-        Text(text = "Your Preference", color = Color.White, fontWeight = FontWeight.SemiBold)
+        Text(text = "Your Preference", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         Spacer(modifier = modifier.padding(top = 8.dp, bottom = 8.dp))
-        Text(text = good.text, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+        Text(text = good, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
         Spacer(modifier = modifier.padding(top = 8.dp, bottom = 8.dp))
         Button(
             onClick = { onFinish() },
