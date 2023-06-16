@@ -92,9 +92,6 @@ fun ExploreScreen(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "",
-                    modifier = modifier.clickable {
-                        navigateToSearch(searchText)
-                    }
                 )
             }
         )
